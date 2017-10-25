@@ -1,0 +1,3 @@
+[submodule "pyminic"]
+	path = pyminic
+	url = https://github.com/victornicolet/pyminic.git
