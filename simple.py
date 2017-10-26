@@ -177,3 +177,5 @@ class ReplaceZero(NodeVisitor):
 
 ReplaceZero().visit(ast2)
 ast2.ext[0].body.show()
+
+#any varaible ID after Assignment symbol is a written variables 
