@@ -1,4 +1,5 @@
-void test(int* a, int b,int k, int c){
+void test(){
+	int *d =3;
 	if(b) {
 		k = k + 1;
 	} else {

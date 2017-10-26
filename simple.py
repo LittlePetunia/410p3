@@ -66,12 +66,25 @@ class IfPrinter(NodeVisitor):
             If.cond.show()
             print ("varaibles")
 
-class FoePrinter(NodeVisitor):
+class ForPrinter(NodeVisitor):
  
     def visit_While(self, For):
 
         if For.cond.__class__.__name__ == "ID":
             For.cond.show()
+            print ("varaibles")
+
+class UnaryPrinter(NodeVisitor):
+ 
+    def visit_While(self, Unary):
+            Unary.expr.show()
+            print ("written varaibles")
+            print ("varaibles")
+
+class DeclPrinter(NodeVisitor):
+ 
+    def visit_While(self, Decl):
+            Decl.name.show()
             print ("varaibles")
 
 
@@ -84,6 +97,8 @@ RHSPrinter2().visit(ast)
 BinaryOpPrinter().visit(ast)
 ArrayRefPrinter().visit(ast)
 WhilePrinter().visit(ast)
-FoePrinter().visit(ast)
+ForPrinter().visit(ast)
 IfPrinter().visit(ast)
+DeclPrinter().visit(ast)
+UnaryPrinter().visit(ast)
 #any varaible ID after Assignment symbol is a written variables 

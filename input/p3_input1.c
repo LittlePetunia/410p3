@@ -1,3 +1,3 @@
-void test(int a, int b){
+void test(){
 	b = a + 3;
 }

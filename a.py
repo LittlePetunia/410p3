@@ -14,7 +14,7 @@ sys.path.extend(['.', '..'])
 # - 1 Basics: parsing and visiting the AST
 
 # Read and parse the file
-ast = parse_file('./input/p3_input3.c')
+ast = parse_file('./input/p3_input2.c')
 # Now the 'ast' variables contains the ast we want to work on
 # To look at how the ast is built, have a look at the c_ast.py file
 # in the pycparser package (../pycparser/c_ast.py)
