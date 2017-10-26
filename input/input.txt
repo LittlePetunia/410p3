@@ -1,0 +1,13 @@
+input1 
+
+variables a,b
+written variables b
+
+input2
+variables b,k,c,a
+written variables k c
+
+
+input3
+variables a b c,e
+written variables b e
