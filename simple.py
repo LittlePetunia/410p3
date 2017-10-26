@@ -36,7 +36,7 @@ class LHSPrinter2(NodeVisitor):
 class RHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
-    	if assignment.rvalue.__class__.__name__ == "ID":
+        if assignment.rvalue.__class__.__name__ == "ID":
             assignment.rvalue.show()
             print ("varaibles")
         
@@ -63,7 +63,6 @@ class BinaryOpPrinter(NodeVisitor):
 
 LHSPrinter2().visit(ast)
 RHSPrinter2().visit(ast)
-BinaryOpPrinter().visit(ast)
 
 
 #any varaible ID after Assignment symbol is a written variables 
