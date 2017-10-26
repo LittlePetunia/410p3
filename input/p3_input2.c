@@ -5,4 +5,5 @@ void test(int* a, int b,int k, int c){
 		k = k - 1;
 	}
 	c = a[k];
+	d++;
 }
