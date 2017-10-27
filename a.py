@@ -43,4 +43,4 @@ class ReplaceZero(NodeVisitor):
             decl.init.value = '-1'
 
 ReplaceZero().visit(ast2)
-ast2.ext[0].body.show()
+ast2.ext[0].body.show(sys.stdout,0,True,False,False)
