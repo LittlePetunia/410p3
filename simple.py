@@ -17,7 +17,8 @@ class LHSPrinter2(NodeVisitor):
         # If the declaration has an init field
         if decl.init is not None:
             # Show the name of the value initialized
-            print ("ID: %s" , decl.name)
+            print ("ID: " + decl.name)
+            print ("written varaibles")
 
 
 
@@ -87,11 +88,6 @@ class ForPrinter(NodeVisitor):
 ##            print ("written varaibles")
 ##            print ("varaibles")
 ##
-##class DeclPrinter(NodeVisitor):
-## 
-##    def visit_While(self, Decl):
-##            Decl.show()
-##            print ("varaibles")
 
 
 class FunctionDefVisitor2(NodeVisitor):
@@ -114,6 +110,6 @@ class FunctionDefVisitor2(NodeVisitor):
 
 FunctionDefVisitor2().visit(ast)
 
-##DeclPrinter().visit(ast)
+
 ##UnaryPrinter().visit(ast)
 #any varaible ID after Assignment symbol is a written variables 
