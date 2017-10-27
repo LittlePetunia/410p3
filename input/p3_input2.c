@@ -5,4 +5,5 @@ void test(){
 		k = k - 1;
 	}
 	c = a[k];
+	i++;
 }
