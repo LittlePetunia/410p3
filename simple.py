@@ -11,14 +11,14 @@ class LHSPrinter2(NodeVisitor):
     def visit_Assignment(self, assignment):
 
         assignment.lvalue.show()
-        print("written varaibles")
+        print("written variables")
 
     def visit_Decl(self, decl):
         # If the declaration has an init field
         if decl.init is not None:
             # Show the name of the value initialized
             print ("ID: " + decl.name)
-            print ("written varaibles")
+            print ("written variables")
 
 
 
@@ -27,7 +27,7 @@ class RHSPrinter2(NodeVisitor):
     def visit_Assignment(self, assignment):
         if assignment.rvalue.__class__.__name__ == "ID":
             assignment.rvalue.show()
-            print ("varaibles")
+            print ("variables")
     
 
 class BinaryOpPrinter(NodeVisitor):
@@ -37,11 +37,11 @@ class BinaryOpPrinter(NodeVisitor):
 
         if binaryOp.left.__class__.__name__ == "ID":
             binaryOp.left.show()
-            print ("varaibles")
+            print ("variables")
         
         if binaryOp.right.__class__.__name__ =="ID":
             binaryOp.right.show()
-            print ("varaibles")
+            print ("variables")
 
 
 class ArrayRefPrinter(NodeVisitor):
@@ -51,11 +51,11 @@ class ArrayRefPrinter(NodeVisitor):
 
         if ArrayRef.name.__class__.__name__ == "ID":
             ArrayRef.name.show()
-            print ("varaibles")
+            print ("variables")
         
         if ArrayRef.subscript.__class__.__name__ =="ID":
             ArrayRef.subscript.show()
-            print ("varaibles")
+            print ("variables")
 
 class WhilePrinter(NodeVisitor):
  
@@ -63,7 +63,7 @@ class WhilePrinter(NodeVisitor):
 
         if While.cond.__class__.__name__ == "ID":
             While.cond.show()
-            print ("varaibles")
+            print ("variables")
 
 class IfPrinter(NodeVisitor):
  
@@ -71,7 +71,7 @@ class IfPrinter(NodeVisitor):
 
         if If.cond.__class__.__name__ == "ID":
             If.cond.show()
-            print ("varaibles")
+            print ("variables")
 
 class ForPrinter(NodeVisitor):
  
@@ -79,13 +79,20 @@ class ForPrinter(NodeVisitor):
 
         if For.cond.__class__.__name__ == "ID":
             For.cond.show()
-            print ("varaibles")
+            print ("variables")
+
+class UnaryPrinter(NodeVisitor):
+ 
+    def visit_Unary(self, Unary):
+            Unary.expr.show()
+            print ("written variables")
 
 #class UnaryPrinter(NodeVisitor):
 # 
 #    def visit_Unary(self, Unary):
 #            Unary.expr.show()
 #            print ("written varaibles")
+
 
 
 
@@ -102,6 +109,7 @@ class FunctionDefVisitor2(NodeVisitor):
             ForPrinter().visit(funcdef.body)
             IfPrinter().visit(funcdef.body)
             #UnaryPrinter().visit(funcdef.body)
+
         else:
             print ("\nWe don't care about main.")
 
