@@ -203,5 +203,4 @@ class ReplaceZero(NodeVisitor):
         # of the condition only when the first is true.
         if decl.init is not None and decl.init.value == '0':
             decl.init.value = '-1'
-
-FunctionDefVisitor2().visit(ast)
+ast2.ext[0].body.show()

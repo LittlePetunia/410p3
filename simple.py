@@ -81,13 +81,13 @@ class ForPrinter(NodeVisitor):
             For.cond.show()
             print ("varaibles")
 
-##class UnaryPrinter(NodeVisitor):
-## 
-##    def visit_While(self, Unary):
-##            Unary.name.show()
-##            print ("written varaibles")
-##            print ("varaibles")
-##
+#class UnaryPrinter(NodeVisitor):
+# 
+#    def visit_Unary(self, Unary):
+#            Unary.expr.show()
+#            print ("written varaibles")
+
+
 
 
 class FunctionDefVisitor2(NodeVisitor):
@@ -101,6 +101,7 @@ class FunctionDefVisitor2(NodeVisitor):
             WhilePrinter().visit(funcdef.body)
             ForPrinter().visit(funcdef.body)
             IfPrinter().visit(funcdef.body)
+            #UnaryPrinter().visit(funcdef.body)
         else:
             print ("\nWe don't care about main.")
 
