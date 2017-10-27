@@ -1,9 +1,13 @@
 from pycparser import parse_file
 from pycparser.c_ast import *
+import sys
+
+sys.path.append('./pyminic/minic/')
+from c_ast_to_minic import *
 sys.path.extend(['.','..'])
 
 ast = parse_file('./input/p3_input2.c')
-
+ast2 = t(ast)
 
 
 class LHSPrinter2(NodeVisitor):
@@ -31,7 +35,7 @@ class RHSPrinter2(NodeVisitor):
     
 
 class BinaryOpPrinter(NodeVisitor):
-    #
+
 
     def visit_BinaryOp(self, binaryOp):
 
@@ -81,11 +85,6 @@ class ForPrinter(NodeVisitor):
             For.cond.show()
             print ("variables")
 
-class UnaryPrinter(NodeVisitor):
- 
-    def visit_Unary(self, Unary):
-            Unary.expr.show()
-            print ("written variables")
 
 #class UnaryPrinter(NodeVisitor):
 # 
@@ -117,8 +116,7 @@ class FunctionDefVisitor2(NodeVisitor):
 
 
 
-FunctionDefVisitor2().visit(ast)
+FunctionDefVisitor2().visit(ast2)
 
 
-##UnaryPrinter().visit(ast)
 #any varaible ID after Assignment symbol is a written variables 
