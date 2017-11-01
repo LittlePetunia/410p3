@@ -123,6 +123,23 @@ class FunctionPrototype(NodeVisitor):
         print(s)
 
 
+class ASTPrinter(NodeVisitor):
+    
+    def __init__(self):
+        self.value = "program"
+        self.list=[]
+
+    def visit_assignment(self,assignment):
+        left = assignment.lvalue
+        right = assignment.rvalue
+        self.list.append((left,right))
+
+    def get_list(self):
+        return self.list
+
+
+
+
 
 if __name__ == '__main__':
     ast = parse_file('./input/p3_input3.c')
