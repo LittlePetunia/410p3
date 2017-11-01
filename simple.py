@@ -15,6 +15,8 @@ class LHSPrinter2(NodeVisitor):
     def visit_Assignment(self, assignment):
         if (assignment.lvalue.name not in written):
             written.append(assignment.lvalue.name)
+        if (assignment.lvalue.name not in vas):
+            vas.append(assignment.lvalue.name)
 
     def visit_Decl(self, decl):
         # If the declaration has an init field
@@ -22,6 +24,8 @@ class LHSPrinter2(NodeVisitor):
             # Show the name of the value initialized
             if (decl.name not in written):
                 written.append(decl.name)
+            if (decl.name not in vas):
+                vas.append(decl.name)
             
 
 
