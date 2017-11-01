@@ -106,10 +106,6 @@ class FunctionDefVisitor2(NodeVisitor):
             ForPrinter().visit(funcdef.body)
             IfPrinter().visit(funcdef.body)
 
-
-        else:
-            print ("\nWe don't care about main.")
-
 class FunctionPrototype(NodeVisitor):
 
     def __str__(self):
