@@ -48,8 +48,8 @@ class BinaryOpPrinter(NodeVisitor):
                 vas.append(binaryOp.left.name)
         
         if binaryOp.right.__class__.__name__ =="ID":
-            if (binaryOp.left.name not in vas):
-                vas.append(binaryOp.left.name)
+            if (binaryOp.right.name not in vas):
+                vas.append(binaryOp.right.name)
 
 
 class ArrayRefPrinter(NodeVisitor):
@@ -110,13 +110,27 @@ class FunctionDefVisitor2(NodeVisitor):
         else:
             print ("\nWe don't care about main.")
 
+class FunctionPrototype(NodeVisitor):
+
+    def __str__(self):
+        s='fun block_function('
+        for i in vas:
+            s+= i +", "
+        s=s[:-2]+") returns "
+        for j in written:
+            s+= j +", "
+        s=s[:-2]
+        print(s)
+
+
 
 if __name__ == '__main__':
-    ast = parse_file('./input/p3_input2.c')
+    ast = parse_file('./input/p3_input3.c')
     ast2 = t(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
     print(written)
     print("varaibles:") 
     print(vas)
+    FunctionPrototype().__str__()
 #any varaible ID after Assignment symbol is a written variables 
