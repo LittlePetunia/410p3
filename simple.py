@@ -7,8 +7,6 @@ from c_ast_to_minic import *
 from minic_ast import *
 sys.path.extend(['.','..'])
 
-ast = parse_file('./input/p3_input2.c')
-ast2 = t(ast)
 written=[]
 vas=[]
 
@@ -56,35 +54,35 @@ class ArrayRefPrinter(NodeVisitor):
     def visit_ArrayRef(self, ArrayRef):
 
         if ArrayRef.name.__class__.__name__ == "ID":
-           if (ArrayRef.name not in vas):
-                vas.append(ArrayRef.name)
+           if (ArrayRef.name.name not in vas):
+                vas.append(ArrayRef.name.name)
         
         if ArrayRef.subscript.__class__.__name__ =="ID":
-            if (ArrayRef.subscript not in vas):
-                vas.append(ArrayRef.subscript)
+            if (ArrayRef.subscript.name not in vas):
+                vas.append(ArrayRef.subscript.name)
 
 class WhilePrinter(NodeVisitor):
  
     def visit_While(self, While):
         if While.cond.__class__.__name__ == "ID":
-            if (While.cond not in vas):
-                vas.append(While.cond)
+            if (While.cond.name not in vas):
+                vas.append(While.cond.name)
 
 class IfPrinter(NodeVisitor):
  
     def visit_If(self, If):
 
         if If.cond.__class__.__name__ == "ID":
-            if (If.cond not in vas):
-                vas.append(If.cond)
+            if (If.cond.name not in vas):
+                vas.append(If.cond.name)
 
 class ForPrinter(NodeVisitor):
  
     def visit_While(self, For):
 
         if For.cond.__class__.__name__ == "ID":
-            if (For.cond not in vas):
-                vas.append(For.cond)
+            if (For.cond.name not in vas):
+                vas.append(For.cond.name)
 
 
 
@@ -110,6 +108,8 @@ class FunctionDefVisitor2(NodeVisitor):
 
 
 if __name__ == '__main__':
+    ast = parse_file('./input/p3_input2.c')
+    ast2 = t(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
     print(written)
