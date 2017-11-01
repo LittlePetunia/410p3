@@ -1,28 +1,30 @@
 from pycparser import parse_file
-from pycparser.c_ast import *
+
 import sys
 
 sys.path.append('./pyminic/minic/')
 from c_ast_to_minic import *
+from minic_ast import *
 sys.path.extend(['.','..'])
 
 ast = parse_file('./input/p3_input2.c')
 ast2 = t(ast)
-
+written=[]
+vas=[]
 
 class LHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
-
-        assignment.lvalue.show()
-        print("written variables")
+        if (assignment.lvalue.name not in written):
+            written.append(assignment.lvalue.name)
 
     def visit_Decl(self, decl):
         # If the declaration has an init field
         if decl.init is not None:
             # Show the name of the value initialized
-            print ("ID: " + decl.name)
-            print ("written variables")
+            if (decl.name not in written):
+                written.append(decl.name)
+            
 
 
 
@@ -30,8 +32,8 @@ class RHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
         if assignment.rvalue.__class__.__name__ == "ID":
-            assignment.rvalue.show()
-            print ("variables")
+            if (assignment.rvalue.name not in vas):
+                vas.append(assignment.rvalue.name)
     
 
 class BinaryOpPrinter(NodeVisitor):
@@ -40,12 +42,12 @@ class BinaryOpPrinter(NodeVisitor):
     def visit_BinaryOp(self, binaryOp):
 
         if binaryOp.left.__class__.__name__ == "ID":
-            binaryOp.left.show()
-            print ("variables")
+            if (binaryOp.left.name not in vas):
+                vas.append(binaryOp.left.name)
         
         if binaryOp.right.__class__.__name__ =="ID":
-            binaryOp.right.show()
-            print ("variables")
+            if (binaryOp.left.name not in vas):
+                vas.append(binaryOp.left.name)
 
 
 class ArrayRefPrinter(NodeVisitor):
@@ -54,43 +56,37 @@ class ArrayRefPrinter(NodeVisitor):
     def visit_ArrayRef(self, ArrayRef):
 
         if ArrayRef.name.__class__.__name__ == "ID":
-            ArrayRef.name.show()
-            print ("variables")
+           if (ArrayRef.name not in vas):
+                vas.append(ArrayRef.name)
         
         if ArrayRef.subscript.__class__.__name__ =="ID":
-            ArrayRef.subscript.show()
-            print ("variables")
+            if (ArrayRef.subscript not in vas):
+                vas.append(ArrayRef.subscript)
 
 class WhilePrinter(NodeVisitor):
  
     def visit_While(self, While):
-
         if While.cond.__class__.__name__ == "ID":
-            While.cond.show()
-            print ("variables")
+            if (While.cond not in vas):
+                vas.append(While.cond)
 
 class IfPrinter(NodeVisitor):
  
     def visit_If(self, If):
 
         if If.cond.__class__.__name__ == "ID":
-            If.cond.show()
-            print ("variables")
+            if (If.cond not in vas):
+                vas.append(If.cond)
 
 class ForPrinter(NodeVisitor):
  
     def visit_While(self, For):
 
         if For.cond.__class__.__name__ == "ID":
-            For.cond.show()
-            print ("variables")
+            if (For.cond not in vas):
+                vas.append(For.cond)
 
 
-#class UnaryPrinter(NodeVisitor):
-# 
-#    def visit_Unary(self, Unary):
-#            Unary.expr.show()
-#            print ("written varaibles")
 
 
 
@@ -107,16 +103,16 @@ class FunctionDefVisitor2(NodeVisitor):
             WhilePrinter().visit(funcdef.body)
             ForPrinter().visit(funcdef.body)
             IfPrinter().visit(funcdef.body)
-            #UnaryPrinter().visit(funcdef.body)
+
 
         else:
             print ("\nWe don't care about main.")
 
 
-
-
-
-FunctionDefVisitor2().visit(ast2)
-
-
+if __name__ == '__main__':
+    FunctionDefVisitor2().visit(ast2)
+    print("written:")
+    print(written)
+    print("varaibles:") 
+    print(vas)
 #any varaible ID after Assignment symbol is a written variables 
