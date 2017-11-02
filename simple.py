@@ -138,7 +138,7 @@ class ASTPrinter(NodeVisitor):
 
 
 if __name__ == '__main__':
-    ast = parse_file('./input/p3_input3.c')
+    ast = parse_file('./input/p3_input4.c')
     ast2 = t(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
