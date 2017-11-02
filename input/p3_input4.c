@@ -1,0 +1,10 @@
+void test(){
+	sum = sum + a[i];
+	if(mps < sum){
+	       mps = sum;
+	}
+	if(mts < mts + a[i]) {
+	       mts += a[i];
+	}
+	mss = max(mss, mts);
+}
