@@ -461,7 +461,7 @@ class Union(Node):
     attr_names = ('name', )
 
 
-class While(Node):
+class Do(Node):
     __slots__ = ('cond', 'stmt', 'coord', '__weakref__')
 
     def __init__(self, cond, stmt, coord=None):
