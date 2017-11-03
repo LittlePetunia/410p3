@@ -478,3 +478,41 @@ class While(Node):
     attr_names = ()
 
 
+class Let(Node):
+    __slots__ = ('identifier', 'lexpr', 'rexpr', 'coord', '__weakref__')
+    
+    def __init__(self, identifier, lexpr, rexpr, coord=None):
+        self.identifier = identifier                
+        self.lexpr = lexpr
+        self.rexpr = rexpr           
+        self.coord = coord
+    
+    def children(self):
+        nodelist = []
+        nodelist.append(("identifier", self.identifier))
+        nodelist.append(("lexpr", self.lexpr))
+        nodelist.append(("rexpr:", self.rexpr))
+        return tuple(nodelist)
+        
+    attr_names = ()
+    
+
+class Letrec(Node):
+    __slots__ = ('args', 'identifier', 'lexpr', 'rexpr', 'coord', '__weakref__')
+    
+    def __init__(self, identifier, args, lexpr, rexpr, coord=None):
+        self.identifier = identifier
+        self.args = args                
+        self.lexpr = lexpr
+        self.rexpr = rexpr              
+        self.coord = coord
+    
+    def children(self):
+        nodelist = []
+        nodelist.append(("identifier", self.identifier))
+        nodelist.append(("args", self.args))
+        nodelist.append(("lexpr", self.lexpr))
+        nodelist.append(("rexpr:", self.rexpr))
+        return tuple(nodelist)
+        
+    attr_names = ()
