@@ -119,7 +119,7 @@ class FunctionPrototype(NodeVisitor):
         print(s)
 
 
-class ASTPrinter(NodeVisitor):
+'''class ASTPrinter(NodeVisitor):
     
     def __init__(self):
         self.value = "program"
@@ -132,7 +132,7 @@ class ASTPrinter(NodeVisitor):
 
     def get_list(self):
         return self.list
-
+'''
 
 
 
