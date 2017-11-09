@@ -107,32 +107,14 @@ class FunctionDefVisitor2(NodeVisitor):
             IfPrinter().visit(funcdef.body)
 
 class FunctionPrototype(NodeVisitor):
+    def __init__(self):
+        self.vars =vas
+        self.written =written
 
     def __str__(self):
-        s='fun block_function('
-        for i in vas:
-            s+= i +", "
-        s=s[:-2]+") returns "
-        for j in written:
-            s+= j +", "
-        s=s[:-2]
-        print(s)
+        print("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns " + ", ".join(list(map(str, self.written))))
+        
 
-
-'''class ASTPrinter(NodeVisitor):
-    
-    def __init__(self):
-        self.value = "program"
-        self.list=[]
-
-    def visit_assignment(self,assignment):
-        left = assignment.lvalue
-        right = assignment.rvalue
-        self.list.append((left,right))
-
-    def get_list(self):
-        return self.list
-'''
 
 
 
