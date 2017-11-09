@@ -4,7 +4,8 @@ import sys
 
 sys.path.append('./pyminic/minic/')
 from c_ast_to_minic import *
-from minic_ast import *
+# from minic_ast import *
+from ast import *
 sys.path.extend(['.','..'])
 
 written=[]

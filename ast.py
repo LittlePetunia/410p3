@@ -142,6 +142,9 @@ class BinaryOp(Node):
         if self.right is not None: nodelist.append(("right", self.right))
         return tuple(nodelist)
 
+    def __str__(self):
+        print self.op
+
     attr_names = ('op', )
 
 
@@ -156,6 +159,9 @@ class Constant(Node):
     def children(self):
         nodelist = []
         return tuple(nodelist)
+
+    def __str__(self):
+        print "type:" + str(self.type) + " value:" + str(self.value)
 
     attr_names = ('type', 'value', )
 
@@ -174,6 +180,9 @@ class ExprList(Node):
         for i, child in enumerate(self.exprs or []):
             nodelist.append(("exprs[%d]" % i, child))
         return tuple(nodelist)
+
+    def __str__(self):
+        print self.exprs
 
     attr_names = ()
 
