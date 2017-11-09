@@ -242,6 +242,24 @@ class FuncDef(Node):
     attr_names = ()
 
 
+class FunctionDef(Node):
+    __slots__ = ('arguments', 'output', 'body', 'coord', '__weakref')
+
+    def __init__(self, arguments, output, body, coord=None):
+        self.arguments = arguments
+        self.output = output
+        self.body = body
+        self.coord = coord
+
+    def children(self):
+        nodelist = []
+        if self.output is not None: nodelist.append(("output", self.output))
+        if self.body is not None: nodelist.append(("body", self.body))
+        for i, child in enumerate(self.arguments or []):
+            nodelist.append(("arguments[%d]" % i, child))
+        return tuple(nodelist)
+
+
 class ID(Node):
     __slots__ = ('name', 'coord', '__weakref__')
 
