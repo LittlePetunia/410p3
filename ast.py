@@ -226,11 +226,10 @@ class FuncCall(Node):
     attr_names = ()
 
     def __str__(self):
-        argString = ""
-        for arg in self.args:
-            argString += str(arg) + ", ";
-
-        return str(self.name) + "(" + argString[:-2] + ")" 
+        if self.args != None:
+            return str(self.name) + "(" + ",".join([str(arg) for arg in self.args]) + ")"
+        else:
+            return str(self.name) + "( )"
 
 
 
@@ -365,10 +364,7 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        if self.rexpr == None:
-            return "Let %s = %s" %(self.identifier, self.lexpr)
-        else:
-            return "Let %s = %s  in %s " %(self.identifier, self.lexpr,self.rexpr)
+        return "Let %s = %s  in %s " %(self.identifier, self.lexpr,self.rexpr)
 
         
     attr_names = ()

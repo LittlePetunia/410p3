@@ -120,7 +120,7 @@ def transformx(block,nextblock):
     if block.__class__.__name__ == "Block":
         for i in range(len(block.block_items)):
             if i == len(block.block_items) -1:
-                return transformx(block.block_items[i],written)
+                return transformx(block.block_items[i],[])
             else:
                 return transformx(block.block_items[i],block.block_items[i+1])
     if block.__class__.__name__ =="Assignment":
@@ -153,7 +153,7 @@ def transformx(block,nextblock):
 
 
 if __name__ == '__main__':
-    ast = parse_file('./input/p3_input1.c')
+    ast = parse_file('./input/p3_input7.c')
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
