@@ -332,7 +332,8 @@ class TernaryOp(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "if ( %s ) then %s else %s" (self.cond, self.iftrue, self.iffalse)
+        return "if  %s  then %s else %s" %(self.cond, self.iftrue, self.iffalse)
+
     attr_names = ()
 
 

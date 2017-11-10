@@ -115,12 +115,37 @@ class FunctionPrototype(NodeVisitor):
         
 
 
-def transform(block):
-    for i in block.block_items:
-        if i.__class__.__name__ == "Assignment":
-            return Let(i.lvalue,i.rvalue)
-    
+def transform(block,nextblock):
 
+    if block.__class__.__name__ == "Block":
+        for i in range(len(block.block_items)):
+            if i == len(block.block_items) -1:
+                return transform(block.block_items[i],[])
+            else:
+                return transform(block.block_items[i],block.block_items[i+1])
+    if block.__class__.__name__ =="Assignment":
+        
+        return Let(transform(block.lvalue,[]), transform(block.rvalue,[]),transform(nextblock,[]))
+
+    if block.__class__.__name__ == "BinaryOp":
+
+        return BinaryOp(block.op,transform(block.left,[]),transform(block.right,[]))        
+    if block.__class__.__name__ =="Constant":
+
+        return Constant(block.type,block.value)
+
+    if block.__class__.__name__ =="If":
+
+        return TernaryOp(transform(block.cond,[]),transform(block.iftrue,[]),transform(block.iffalse,[])) 
+    if block.__class__.__name__ =="ID":
+
+        return ID(block.name)
+
+    if block.__class__.__name__ =="ArrayRef":
+
+        return ArrayRef(transform(block.name,[]),transform(block.subscript,[]))
+    if block.__class__.__name__ =="FuncCall":
+        return FuncCall(trannsform(block.name,[]), transform(block.args),[])
 
 
 if __name__ == '__main__':
@@ -132,4 +157,4 @@ if __name__ == '__main__':
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
-    print(transform(ast2.ext[0].body))
+    print(transform(ast2.ext[0].body,[]))
