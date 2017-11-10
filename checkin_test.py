@@ -120,7 +120,7 @@ def transformx(block,nextblock):
     if block.__class__.__name__ == "Block":
         for i in range(len(block.block_items)):
             if i == len(block.block_items) -1:
-                return transformx(block.block_items[i],[])
+                return transformx(block.block_items[i],written)
             else:
                 return transformx(block.block_items[i],block.block_items[i+1])
     if block.__class__.__name__ =="Assignment":
@@ -149,10 +149,11 @@ def transformx(block,nextblock):
         for i in block.args.exprs:
             args.append(transformx(i,[]))
         return FuncCall(transformx(block.name,[]),args)
+   
 
 
 if __name__ == '__main__':
-    ast = parse_file('./input/p3_input4.c')
+    ast = parse_file('./input/p3_input1.c')
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
@@ -160,4 +161,4 @@ if __name__ == '__main__':
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
-    print(transformx(ast2.ext[0].body,[]))
+    print(transformx(ast2.ext[0].body,written))
