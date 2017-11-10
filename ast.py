@@ -227,10 +227,10 @@ class FuncCall(Node):
     attr_names = ()
 
     def __str__(self):
-        if self.args is not None:
-            return "%s(%s)" % (self.name, self.args)
+        if self.args != None:
+            return str(self.name) + "(" + ",".join([str(arg) for arg in self.args]) + ")"
         else:
-            return "%s()" % self.name
+            return str(self.name) + "( )"
 
 
 
