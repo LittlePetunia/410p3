@@ -143,7 +143,7 @@ class BinaryOp(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        print self.op
+        return self.op
 
     attr_names = ('op', )
 
@@ -161,7 +161,7 @@ class Constant(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        print "type:" + str(self.type) + " value:" + str(self.value)
+        return "type:" + str(self.type) + " value:" + str(self.value)
 
     attr_names = ('type', 'value', )
 
@@ -182,7 +182,7 @@ class ExprList(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        print self.exprs
+        return self.exprs
 
     attr_names = ()
 
@@ -270,6 +270,11 @@ class ID(Node):
     def children(self):
         nodelist = []
         return tuple(nodelist)
+
+    def __str__(self):
+        return self.name
+
+
 
     attr_names = ('name', )
 
