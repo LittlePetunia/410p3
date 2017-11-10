@@ -373,11 +373,8 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
-<<<<<<< HEAD
         return "Let %s = %s  in %s " %(self.identifier, self.lexpr,self.rexpr)
-=======
-        return "Let" +identifier+ "="+lexpr + " in " +rexpr
->>>>>>> 9fc95bda8365ae4a0e5d3799fb4067ed0a7395a0
+
         
     attr_names = ()
     
