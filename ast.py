@@ -123,6 +123,10 @@ class ArrayRef(Node):
 
     attr_names = ()
 
+    def __str__(self):
+        return "(%s %s)" % (self.name, self.subscript)
+
+
 
 
 
@@ -182,7 +186,7 @@ class ExprList(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return self.exprs
+        return str(self.exprs)
 
     attr_names = ()
 
@@ -257,7 +261,7 @@ class ID(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return self.name
+        return "%s" % self.name
 
 
 
@@ -275,7 +279,7 @@ class IdentifierType(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "(%s)" % (self.names)
+        return "%s" % self.names
 
     attr_names = ('names', )
 
@@ -363,6 +367,9 @@ class TernaryOp(Node):
         if self.iftrue is not None: nodelist.append(("iftrue", self.iftrue))
         if self.iffalse is not None: nodelist.append(("iffalse", self.iffalse))
         return tuple(nodelist)
+
+    def __str__(self):
+        return "if ( %s ) then %s else %s" (self.cond, self.iftrue, self.iffalse)
 
     attr_names = ()
 
