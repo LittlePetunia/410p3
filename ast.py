@@ -121,13 +121,10 @@ class ArrayRef(Node):
         if self.subscript is not None: nodelist.append(("subscript", self.subscript))
         return tuple(nodelist)
 
-    attr_names = ()
-
     def __str__(self):
-        return "(%s %s)" % (self.name, self.subscript)
+        return "%s[ %s]" % (self.name,self.subscript)
 
-
-
+    attr_names = ()
 
 
 
@@ -147,7 +144,7 @@ class BinaryOp(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "(%s %s %s)" % (left,  op, right)
+        return "(%s %s %s)" % (self.left,  self.op, self.right)
 
     attr_names = ('op', )
 
@@ -165,7 +162,7 @@ class Constant(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "type:" + str(self.type) + " value:" + str(self.value)
+        return  self.value
 
     attr_names = ('type', 'value', )
 
@@ -264,7 +261,6 @@ class ID(Node):
         return "%s" % self.name
 
 
-
     attr_names = ('name', )
 
 
@@ -283,39 +279,6 @@ class IdentifierType(Node):
 
     attr_names = ('names', )
 
-
-# class If(Node):
-#     __slots__ = ('cond', 'iftrue', 'iffalse', 'coord', '__weakref__')
-#     def __init__(self, cond, iftrue, iffalse, coord=None):
-#         self.cond = cond
-#         self.iftrue = iftrue
-#         self.iffalse = iffalse
-#         self.coord = coord
-
-#     def children(self):
-#         nodelist = []
-#         if self.cond is not None: nodelist.append(("cond", self.cond))
-#         if self.iftrue is not None: nodelist.append(("iftrue", self.iftrue))
-#         if self.iffalse is not None: nodelist.append(("iffalse", self.iffalse))
-#         return tuple(nodelist)
-
-#     attr_names = ()
-
-
-class Label(Node):
-    __slots__ = ('name', 'stmt', 'coord', '__weakref__')
-
-    def __init__(self, name, stmt, coord=None):
-        self.name = name
-        self.stmt = stmt
-        self.coord = coord
-
-    def children(self):
-        nodelist = []
-        if self.stmt is not None: nodelist.append(("stmt", self.stmt))
-        return tuple(nodelist)
-
-    attr_names = ('name', )
 
 
 class NamedInitializer(Node):
@@ -370,45 +333,7 @@ class TernaryOp(Node):
 
     def __str__(self):
         return "if ( %s ) then %s else %s" (self.cond, self.iftrue, self.iffalse)
-
     attr_names = ()
-
-
-class Typename(Node):
-    __slots__ = ('name', 'type', 'coord', '__weakref__')
-
-    def __init__(self, name, ttype, coord=None):
-        self.name = name
-        self.type = ttype
-        self.coord = coord
-
-    def children(self):
-        nodelist = []
-        if self.type is not None: nodelist.append(("type", self.type))
-        return tuple(nodelist)
-
-    attr_names = ('name', )
-
-
-
-
-class Union(Node):
-    __slots__ = ('name', 'decls', 'coord', '__weakref__')
-
-    def __init__(self, name, decls, coord=None):
-        self.name = name
-        self.decls = decls
-        self.coord = coord
-
-    def children(self):
-        nodelist = []
-        for i, child in enumerate(self.decls or []):
-            nodelist.append(("decls[%d]" % i, child))
-        return tuple(nodelist)
-
-    attr_names = ('name', )
-
-
 
 
 class Let(Node):
@@ -428,7 +353,8 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "Let" +identifier+ "="+lexpr + " in " +rexpr
+        return "Let %s = %s  in %s " %(self.identifier, self.lexpr,self.rexpr)
+
         
     attr_names = ()
     

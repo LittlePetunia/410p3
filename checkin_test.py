@@ -118,10 +118,7 @@ class FunctionPrototype(NodeVisitor):
 def transform(block):
     for i in block.block_items:
         if i.__class__.__name__ == "Assignment":
-            print(i.rvalue)
-            Let(i.lvalue,transform(i.rvalue),[])
-        if i.__class__.__name__ =="If":
-            return i
+            return Let(i.lvalue,i.rvalue)
     
 
 
