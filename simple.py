@@ -92,9 +92,6 @@ class ForPrinter(NodeVisitor):
 
 
 
-
-
-
 class FunctionDefVisitor2(NodeVisitor):
 
     def visit_FuncDef(self, funcdef):
