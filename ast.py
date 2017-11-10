@@ -231,6 +231,8 @@ class FuncCall(Node):
         else:
             return "(%s %s)" % (self.name, str(self.args))
 
+
+
 class FunctionDef(Node):
     __slots__ = ('arguments', 'output', 'body', 'coord', '__weakref')
 
@@ -337,7 +339,8 @@ class TernaryOp(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "if ( %s ) then %s else %s" % (self.cond, self.iftrue, self.iffalse)
+
+        return "if  %s  then %s else %s" %(self.cond, self.iftrue, self.iffalse)
     attr_names = ()
 
 
