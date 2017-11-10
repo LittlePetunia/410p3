@@ -221,6 +221,9 @@ class FuncCall(Node):
 
     attr_names = ()
 
+    def __str__(self):
+        return "(%s %s)" % (name, str(args))
+
 
 
 
@@ -271,25 +274,28 @@ class IdentifierType(Node):
         nodelist = []
         return tuple(nodelist)
 
+    def __str__(self):
+        return "(%s)" % (self.names)
+
     attr_names = ('names', )
 
 
-class If(Node):
-    __slots__ = ('cond', 'iftrue', 'iffalse', 'coord', '__weakref__')
-    def __init__(self, cond, iftrue, iffalse, coord=None):
-        self.cond = cond
-        self.iftrue = iftrue
-        self.iffalse = iffalse
-        self.coord = coord
+# class If(Node):
+#     __slots__ = ('cond', 'iftrue', 'iffalse', 'coord', '__weakref__')
+#     def __init__(self, cond, iftrue, iffalse, coord=None):
+#         self.cond = cond
+#         self.iftrue = iftrue
+#         self.iffalse = iffalse
+#         self.coord = coord
 
-    def children(self):
-        nodelist = []
-        if self.cond is not None: nodelist.append(("cond", self.cond))
-        if self.iftrue is not None: nodelist.append(("iftrue", self.iftrue))
-        if self.iffalse is not None: nodelist.append(("iffalse", self.iffalse))
-        return tuple(nodelist)
+#     def children(self):
+#         nodelist = []
+#         if self.cond is not None: nodelist.append(("cond", self.cond))
+#         if self.iftrue is not None: nodelist.append(("iftrue", self.iftrue))
+#         if self.iffalse is not None: nodelist.append(("iffalse", self.iffalse))
+#         return tuple(nodelist)
 
-    attr_names = ()
+#     attr_names = ()
 
 
 class Label(Node):
@@ -415,7 +421,7 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "Let" +identifier+ "="+lexpr + "in" +rexpr
+        return "Let" +identifier+ "="+lexpr + " in " +rexpr
         
     attr_names = ()
     
