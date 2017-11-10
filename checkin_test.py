@@ -115,47 +115,46 @@ class FunctionPrototype(NodeVisitor):
         
 
 
-def transform(block,nextblock):
+def transformx(block,nextblock):
 
     if block.__class__.__name__ == "Block":
         for i in range(len(block.block_items)):
             if i == len(block.block_items) -1:
-                return transform(block.block_items[i],[])
+                return transformx(block.block_items[i],[])
             else:
-                return transform(block.block_items[i],block.block_items[i+1])
+                return transformx(block.block_items[i],block.block_items[i+1])
     if block.__class__.__name__ =="Assignment":
         
-        return Let(transform(block.lvalue,[]), transform(block.rvalue,[]),transform(nextblock,[]))
+        return Let(transformx(block.lvalue,[]), transformx(block.rvalue,[]),transformx(nextblock,[]))
 
     if block.__class__.__name__ == "BinaryOp":
 
-        return BinaryOp(block.op,transform(block.left,[]),transform(block.right,[]))        
+        return BinaryOp(block.op,transformx(block.left,[]),transformx(block.right,[]))        
     if block.__class__.__name__ =="Constant":
 
         return Constant(block.type,block.value)
 
     if block.__class__.__name__ =="If":
 
-        return TernaryOp(transform(block.cond,[]),transform(block.iftrue,[]),transform(block.iffalse,[])) 
+        return TernaryOp(transformx(block.cond,[]),transformx(block.iftrue,[]),transformx(block.iffalse,[])) 
     if block.__class__.__name__ =="ID":
 
         return ID(block.name)
 
     if block.__class__.__name__ =="ArrayRef":
 
-        return ArrayRef(transform(block.name,[]),transform(block.subscript,[]))
+        return ArrayRef(transformx(block.name,[]),transformx(block.subscript,[]))
     if block.__class__.__name__ =="FuncCall":
-
-        return FuncCall(transform(block.name,[]), transform(block.args,[]))
-
+        return FuncCall(transformx(block.name,[]), transformx(block.args.exprs,[]))
+        
 
 if __name__ == '__main__':
     ast = parse_file('./input/p3_input4.c')
-    ast2 = t(ast)
+    ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
     print(written)
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
-    print(transform(ast2.ext[0].body,[]))
+    print(transformx(ast2.ext[0].body,[]))
