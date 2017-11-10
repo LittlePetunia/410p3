@@ -145,7 +145,8 @@ def transform(block,nextblock):
 
         return ArrayRef(transform(block.name,[]),transform(block.subscript,[]))
     if block.__class__.__name__ =="FuncCall":
-        return FuncCall(trannsform(block.name,[]), transform(block.args),[])
+
+        return FuncCall(transform(block.name,[]), transform(block.args,[]))
 
 
 if __name__ == '__main__':

@@ -223,7 +223,7 @@ class FuncCall(Node):
     attr_names = ()
 
     def __str__(self):
-        return "(%s %s)" % (name, str(args))
+        return "(%s %s)" % (self.name, str(self.args))
 
 
 
