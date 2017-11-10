@@ -145,8 +145,11 @@ def transformx(block,nextblock):
 
         return ArrayRef(transformx(block.name,[]),transformx(block.subscript,[]))
     if block.__class__.__name__ =="FuncCall":
-        return FuncCall(transformx(block.name,[]), transformx(block.args.exprs,[]))
-        
+        args=[]
+        for i in block.args.exprs:
+            args.append(transformx(i,[]))
+        return FuncCall(transformx(block.name,[]),args)
+
 
 if __name__ == '__main__':
     ast = parse_file('./input/p3_input4.c')
