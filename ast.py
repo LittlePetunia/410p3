@@ -162,7 +162,7 @@ class Constant(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return  self.value
+        return  str(self.value)
 
     attr_names = ('type', 'value', )
 
