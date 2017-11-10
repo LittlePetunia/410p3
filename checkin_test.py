@@ -115,7 +115,15 @@ class FunctionPrototype(NodeVisitor):
         
 
 
-def transform(ast,block):
+def transform(block):
+    for i in block.block_items:
+        if i.__class__.__name__ == "Assignment":
+            print(i.rvalue)
+            Let(i.lvalue,transform(i.rvalue),[])
+        if i.__class__.__name__ =="If":
+            return i
+    
+
 
 
 if __name__ == '__main__':
@@ -127,4 +135,4 @@ if __name__ == '__main__':
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
-    print(transform(ast2,[]))
+    print(transform(ast2.ext[0].body))
