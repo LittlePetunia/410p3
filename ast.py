@@ -210,13 +210,12 @@ class FileAST(Node):
 
 
 class FuncCall(Node):
-    __slots__ = ('name', 'args', 'coord', '__weakref__', 'nid')
+    __slots__ = ('name', 'args', 'coord', '__weakref__')
 
-    def __init__(self, name, args, coord=None, nid=None):
+    def __init__(self, name, args, coord=None):
         self.name = name
         self.args = args
         self.coord = coord
-        self.nid = nid
 
     def children(self):
         nodelist = []
@@ -227,11 +226,11 @@ class FuncCall(Node):
     attr_names = ()
 
     def __str__(self):
-        if self.args is not None:
-            return "%s(%s)" % (self.name, self.args)
-        else:
-            return "%s()" % self.name
+        argString = ""
+        for arg in self.args:
+            argString += str(arg) + ", ";
 
+        return str(self.name) + "(" + argString[:-2] + ")" 
 
 
 
