@@ -183,9 +183,12 @@ class ExprList(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return str(self.exprs)
+        exprs = ""
+        for i, child in  enumerate(self.exprs or []):
+            exprs = exprs + str(("exprs[%d]" % i, child))
+        return exprs
 
-    attr_names = ()
+    attr_names = ('exprs',)
 
 
 class FileAST(Node):
@@ -223,10 +226,10 @@ class FuncCall(Node):
     attr_names = ()
 
     def __str__(self):
-        return "(%s %s)" % (name, str(args))
-
-
-
+        if self.args == None:
+            return "%s()" % self.name
+        else:
+            return "(%s %s)" % (self.name, str(self.args))
 
 class FunctionDef(Node):
     __slots__ = ('arguments', 'output', 'body', 'coord', '__weakref')
@@ -276,6 +279,8 @@ class IdentifierType(Node):
 
     def __str__(self):
         return "%s" % self.names
+
+
 
     attr_names = ('names', )
 
@@ -332,7 +337,7 @@ class TernaryOp(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "if ( %s ) then %s else %s" (self.cond, self.iftrue, self.iffalse)
+        return "if ( %s ) then %s else %s" % (self.cond, self.iftrue, self.iffalse)
     attr_names = ()
 
 
