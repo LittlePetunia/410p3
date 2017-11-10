@@ -91,12 +91,22 @@ class ForPrinter(NodeVisitor):
                 vas.append(For.cond.name)
 
 
+class FuncPrinter(NodeVisitor):
+    def visit_Func(self, Func):
+        if Func.args.exprs is not None:
+            for i in Func.args.exprs:
+                if i.__class__.__name__ =="ID":
+                    if i not in vas:
+                        vas.append(i)
+        
 
 
 class FunctionDefVisitor2(NodeVisitor):
 
     def visit_FuncDef(self, funcdef):
         if funcdef.decl.name != 'main':
+            print "hi"
+            funcdef.body.show()
             LHSPrinter2().visit(funcdef.body)
             RHSPrinter2().visit(funcdef.body)
             BinaryOpPrinter().visit(funcdef.body)
@@ -104,7 +114,8 @@ class FunctionDefVisitor2(NodeVisitor):
             WhilePrinter().visit(funcdef.body)
             ForPrinter().visit(funcdef.body)
             IfPrinter().visit(funcdef.body)
-
+            FuncPrinter().visit(funcdef.body)
+            print "no"
 class FunctionPrototype(NodeVisitor):
     def __init__(self):
         self.vars =vas
@@ -161,4 +172,4 @@ if __name__ == '__main__':
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
-    print(transformx(ast2.ext[0].body,written))
+    print(transformx(ast2.ext[0].body,[]))
