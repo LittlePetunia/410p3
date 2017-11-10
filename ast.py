@@ -431,6 +431,9 @@ class Let(Node):
         nodelist.append(("lexpr", self.lexpr))
         nodelist.append(("rexpr:", self.rexpr))
         return tuple(nodelist)
+
+    def __str__(self):
+        return "Let" +identifier+ "="+lexpr + "in" +rexpr
         
     attr_names = ()
     
