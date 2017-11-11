@@ -124,38 +124,43 @@ class FunctionPrototype(NodeVisitor):
 
 
 def transformx(block,nextblock,written):
-
+    #check whether it is block list or other class"
     if block.__class__.__name__ == "Block":
         for i in range(len(block.block_items)):
+            #linked in next block statemnet
             if (len(block.block_items) >0):
                 return transformx(block.block_items[i],block.block_items[i+1:],written)
     if block.__class__.__name__ =="Assignment":
+        
         if nextblock ==[]:
+            #add written variable as the output in let format
             next=written+[block.lvalue]
             next=[node.name for node in next]
-
+       
         else:
+             #check if there is not only 1 assignment left
             next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue])
         return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
 
     if block.__class__.__name__ == "BinaryOp":
-
+        #check binaryop
         return BinaryOp(block.op,transformx(block.left,[],written),transformx(block.right,[],written))        
     if block.__class__.__name__ =="Constant":
-
+        #check constant
         return Constant(block.type,block.value)
 
     if block.__class__.__name__ =="If":
-
+        #check if return ternaryop
         return TernaryOp(transformx(block.cond,[],written),transformx(block.iftrue,[],written),transformx(block.iffalse,[],written)) 
     if block.__class__.__name__ =="ID":
-
+        #checkk id
         return ID(block.name)
 
     if block.__class__.__name__ =="ArrayRef":
-
+        #check arrayref
         return ArrayRef(transformx(block.name,[],written),transformx(block.subscript,[],written))
     if block.__class__.__name__ =="FuncCall":
+        #check functioncall return function call str
         args=[]
         for i in block.args.exprs:
             args.append(transformx(i,[],written))
@@ -164,7 +169,8 @@ def transformx(block,nextblock,written):
 
 
 if __name__ == '__main__':
-    ast = parse_file('./input/p3_input7.c')
+
+    ast = parse_file('./input/p3_input7.c')  #change input file here by rename the inputfile 
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
@@ -172,4 +178,8 @@ if __name__ == '__main__':
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
+
+    # all above is print function prototype
+    #--------------------------------------------
+    #print function body
     print(transformx(ast2.ext[0].body,[],[]))
