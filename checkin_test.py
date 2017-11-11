@@ -132,6 +132,8 @@ def transformx(block,nextblock,written):
     if block.__class__.__name__ =="Assignment":
         if nextblock ==[]:
             next=written
+            next=[node.name for node in next]
+
         else:
             next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue])
         return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
