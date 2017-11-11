@@ -1,9 +1,6 @@
 void test(){
-	a = b;
-	if(c = a + b){
-		a = 0;
-	}
-	else{
-		b = 0;
-	}
+	b = a + 3;
+	d = b + c;
+	d = d + 1;
+	e = c + 3;
 }
