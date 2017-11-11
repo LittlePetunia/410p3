@@ -131,7 +131,7 @@ def transformx(block,nextblock,written):
                 return transformx(block.block_items[i],block.block_items[i+1:],written)
     if block.__class__.__name__ =="Assignment":
         if nextblock ==[]:
-            next=written
+            next=written+[block.lvalue]
             next=[node.name for node in next]
 
         else:
