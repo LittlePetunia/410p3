@@ -91,12 +91,19 @@ class ForPrinter(NodeVisitor):
                 vas.append(For.cond.name)
 
 
+class FuncPrinter(NodeVisitor):
+    def visit_Func(self, funcCall):
+        if funcCall.args is not None:
+            for exprs, child in funcCall.args.children():
+                self.visit(child)
+        
 
 
 class FunctionDefVisitor2(NodeVisitor):
 
     def visit_FuncDef(self, funcdef):
         if funcdef.decl.name != 'main':
+            #funcdef.body.show()
             LHSPrinter2().visit(funcdef.body)
             RHSPrinter2().visit(funcdef.body)
             BinaryOpPrinter().visit(funcdef.body)
@@ -104,6 +111,7 @@ class FunctionDefVisitor2(NodeVisitor):
             WhilePrinter().visit(funcdef.body)
             ForPrinter().visit(funcdef.body)
             IfPrinter().visit(funcdef.body)
+            FuncPrinter().visit(funcdef.body)
 
 class FunctionPrototype(NodeVisitor):
     def __init__(self):
@@ -111,48 +119,46 @@ class FunctionPrototype(NodeVisitor):
         self.written =written
 
     def __str__(self):
-        print("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns " + ", ".join(list(map(str, self.written))))
+        print("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns (" + ", ".join(list(map(str, self.written)))) +")"
         
 
 
-def transformx(block,nextblock):
+def transformx(block,nextblock,written):
 
     if block.__class__.__name__ == "Block":
         for i in range(len(block.block_items)):
-            if i == len(block.block_items) -1:
-                return transformx(block.block_items[i],[])
-            else:
-                return transformx(block.block_items[i],block.block_items[i+1])
+            if (len(block.block_items) >0):
+                return transformx(block.block_items[i],block.block_items[i+1:],written)
     if block.__class__.__name__ =="Assignment":
-        
-        return Let(transformx(block.lvalue,[]), transformx(block.rvalue,[]),transformx(nextblock,[]))
+        return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),written+[block.lvalue])
 
     if block.__class__.__name__ == "BinaryOp":
 
-        return BinaryOp(block.op,transformx(block.left,[]),transformx(block.right,[]))        
+        return BinaryOp(block.op,transformx(block.left,[],written),transformx(block.right,[],written))        
     if block.__class__.__name__ =="Constant":
 
         return Constant(block.type,block.value)
 
     if block.__class__.__name__ =="If":
 
-        return TernaryOp(transformx(block.cond,[]),transformx(block.iftrue,[]),transformx(block.iffalse,[])) 
+        return TernaryOp(transformx(block.cond,[],written),transformx(block.iftrue,[],written),transformx(block.iffalse,[],written)) 
     if block.__class__.__name__ =="ID":
 
         return ID(block.name)
 
     if block.__class__.__name__ =="ArrayRef":
 
-        return ArrayRef(transformx(block.name,[]),transformx(block.subscript,[]))
+        return ArrayRef(transformx(block.name,[],written),transformx(block.subscript,[],written))
     if block.__class__.__name__ =="FuncCall":
         args=[]
         for i in block.args.exprs:
-            args.append(transformx(i,[]))
-        return FuncCall(transformx(block.name,[]),args)
+            args.append(transformx(i,[],written))
+        return FuncCall(transformx(block.name,[],written),args)
+   
 
 
 if __name__ == '__main__':
-    ast = parse_file('./input/p3_input4.c')
+    ast = parse_file('./input/p3_input7.c')
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
@@ -160,4 +166,4 @@ if __name__ == '__main__':
     print("varaibles:") 
     print(vas)
     FunctionPrototype().__str__()
-    print(transformx(ast2.ext[0].body,[]))
+    print(transformx(ast2.ext[0].body,[],[]))
