@@ -130,7 +130,11 @@ def transformx(block,nextblock,written):
             if (len(block.block_items) >0):
                 return transformx(block.block_items[i],block.block_items[i+1:],written)
     if block.__class__.__name__ =="Assignment":
-        return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),written+[block.lvalue])
+        if nextblock ==[]:
+            next=written
+        else:
+            next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue])
+        return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
 
     if block.__class__.__name__ == "BinaryOp":
 
