@@ -32,7 +32,15 @@ class AllVariables(NodeVisitor):
     
     def visit_ID(self, Id):
         if not Id.name in vas:
-            vas.append(Id.name) 
+            vas.append(Id.name)
+            
+    def visit_FuncCall(self,funcCall):
+        if funcCall.args is not None:
+            for exprs, child in funcCall.args.children():
+                self.visit(child)
+
+
+    
 
 
 
