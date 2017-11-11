@@ -26,92 +26,24 @@ class LHSPrinter2(NodeVisitor):
             # Show the name of the value initialized
             if (decl.name not in written):
                 written.append(decl.name)
-            if (decl.name not in vas):
-                vas.append(decl.name)
-            
 
 
-
-class RHSPrinter2(NodeVisitor):
-
-    def visit_Assignment(self, assignment):
-        if assignment.rvalue.__class__.__name__ == "ID":
-            if (assignment.rvalue.name not in vas):
-                vas.append(assignment.rvalue.name)
     
-
-class BinaryOpPrinter(NodeVisitor):
-
-
-    def visit_BinaryOp(self, binaryOp):
-
-        if binaryOp.left.__class__.__name__ == "ID":
-            if (binaryOp.left.name not in vas):
-                vas.append(binaryOp.left.name)
-        
-        if binaryOp.right.__class__.__name__ =="ID":
-            if (binaryOp.right.name not in vas):
-                vas.append(binaryOp.right.name)
-
-
-class ArrayRefPrinter(NodeVisitor):
+class AllVariables(NodeVisitor):
     
+    def visit_ID(self, Id):
+        if not Id.name in vas:
+            vas.append(Id.name) 
 
-    def visit_ArrayRef(self, ArrayRef):
-
-        if ArrayRef.name.__class__.__name__ == "ID":
-           if (ArrayRef.name.name not in vas):
-                vas.append(ArrayRef.name.name)
-        
-        if ArrayRef.subscript.__class__.__name__ =="ID":
-            if (ArrayRef.subscript.name not in vas):
-                vas.append(ArrayRef.subscript.name)
-
-class WhilePrinter(NodeVisitor):
- 
-    def visit_While(self, While):
-        if While.cond.__class__.__name__ == "ID":
-            if (While.cond.name not in vas):
-                vas.append(While.cond.name)
-
-class IfPrinter(NodeVisitor):
- 
-    def visit_If(self, If):
-
-        if If.cond.__class__.__name__ == "ID":
-            if (If.cond.name not in vas):
-                vas.append(If.cond.name)
-
-class ForPrinter(NodeVisitor):
- 
-    def visit_While(self, For):
-
-        if For.cond.__class__.__name__ == "ID":
-            if (For.cond.name not in vas):
-                vas.append(For.cond.name)
-
-
-class FuncPrinter(NodeVisitor):
-    def visit_Func(self, funcCall):
-        if funcCall.args is not None:
-            for exprs, child in funcCall.args.children():
-                self.visit(child)
-        
 
 
 class FunctionDefVisitor2(NodeVisitor):
 
     def visit_FuncDef(self, funcdef):
         if funcdef.decl.name != 'main':
-            #funcdef.body.show()
+            AllVariables().visit(funcdef.body)
             LHSPrinter2().visit(funcdef.body)
-            RHSPrinter2().visit(funcdef.body)
-            BinaryOpPrinter().visit(funcdef.body)
-            ArrayRefPrinter().visit(funcdef.body)
-            WhilePrinter().visit(funcdef.body)
-            ForPrinter().visit(funcdef.body)
-            IfPrinter().visit(funcdef.body)
-            FuncPrinter().visit(funcdef.body)
+            
 
 class FunctionPrototype(NodeVisitor):
     def __init__(self):
@@ -169,8 +101,8 @@ def transformx(block,nextblock,written):
 
 
 if __name__ == '__main__':
-
-    ast = parse_file('./input/p3_input7.c')  #change input file here by rename the inputfile 
+    #change input file here by rename the inputfile 
+    ast = parse_file('./input/p3_input7.c')
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
