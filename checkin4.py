@@ -73,12 +73,12 @@ def transformx(block,nextblock,written):
         
         if nextblock ==[]:
             #add written variable as the output in let format
-            next=written+[block.lvalue]
-            next=[node.name for node in next]
-       
+            if block.lvalue.name not in written:
+                written.append(block.lvalue.name)
+            next=written
         else:
              #check if there is not only 1 assignment left
-            next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue])
+            next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue.name])
         return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
 
     if block.__class__.__name__ == "BinaryOp":
@@ -90,7 +90,31 @@ def transformx(block,nextblock,written):
 
     if block.__class__.__name__ =="If":
         #check if return ternaryop
-        return TernaryOp(transformx(block.cond,[],written),transformx(block.iftrue,[],written),transformx(block.iffalse,[],written)) 
+        ifwritten=[]
+        #add if true assignment written vairables
+        for i in block.iftrue.block_items:
+            if i.__class__.__name__=="Assignment":
+                if i.lvalue.name not in ifwritten:
+                    ifwritten.append(i.lvalue.name)
+
+        #check whether the iffalse is none,add written variables
+        if block.iffalse is not None:
+            for i in block.iffalse.block_items:
+                if i.__class__.__name__=="Assignment":
+                    if i.lvalue.name not in ifwritten:
+                        ifwritten.append(i.lvalue.name)
+        
+        ifstatemnet = TernaryOp(transformx(block.cond,[],[]),transformx(block.iftrue,[],ifwritten),transformx(block.iffalse,[],ifwritten))
+        
+        if nextblock ==[]:
+            next=written
+        else:
+            for i in ifwritten:
+                if i not in written:
+                    written.append(i)
+            next=transformx(nextblock[0],nextblock[1:],written)
+        
+        return Let(ifwritten,ifstatemnet,next) 
     if block.__class__.__name__ =="ID":
         #checkk id
         return ID(block.name)
@@ -109,7 +133,7 @@ def transformx(block,nextblock,written):
 
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    ast = parse_file('./input/p3_input7.c')
+    ast = parse_file('./input/p3_input3.c')
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
