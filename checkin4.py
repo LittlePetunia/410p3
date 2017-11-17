@@ -78,7 +78,9 @@ def transformx(block,nextblock,written):
             next=written
         else:
              #check if there is not only 1 assignment left
-            next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue.name])
+            if block.lvalue.name not in written:
+                written.append(block.lvalue.name)
+            next =transformx(nextblock[0],nextblock[1:],written)
         return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
 
     if block.__class__.__name__ == "BinaryOp":
@@ -134,6 +136,13 @@ def transformx(block,nextblock,written):
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
     ast = parse_file('./input/p3_input3.c')
+    with open('./input/p3_input3.c', 'r') as f:
+        lineArr=f.read().split('\n')
+        print "=======input======="
+        for line in lineArr:
+            print line
+  
+    
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
