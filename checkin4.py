@@ -120,7 +120,6 @@ def transformx(block,nextblock,written):
                 if i not in written:
                     written.append(i)
             next=transformx(nextblock[0],nextblock[1:],written)
-        print(next)
         return Let(ifwritten,ifstatemnet,next) 
     if block.__class__.__name__ =="ID":
         #checkk id
@@ -140,7 +139,14 @@ def transformx(block,nextblock,written):
 
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    ast = parse_file('./input/p3_input6.c')
+
+    ast = parse_file('./input/p3_input3.c')
+    with open('./input/p3_input3.c', 'r') as f:
+        lineArr=f.read().split('\n')
+        print "=======input======="
+        for line in lineArr:
+            print line
+  
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
