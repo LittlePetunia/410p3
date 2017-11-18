@@ -78,7 +78,9 @@ def transformx(block,nextblock,written):
             next=written
         else:
              #check if there is not only 1 assignment left
-            next =transformx(nextblock[0],nextblock[1:],written+[block.lvalue.name])
+            if block.lvalue.name not in written:
+                written.append(block.lvalue.name)
+            next =transformx(nextblock[0],nextblock[1:],written)
         return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
 
     if block.__class__.__name__ == "BinaryOp":
@@ -103,17 +105,22 @@ def transformx(block,nextblock,written):
                 if i.__class__.__name__=="Assignment":
                     if i.lvalue.name not in ifwritten:
                         ifwritten.append(i.lvalue.name)
-        
-        ifstatemnet = TernaryOp(transformx(block.cond,[],[]),transformx(block.iftrue,[],ifwritten),transformx(block.iffalse,[],ifwritten))
-        
+            ifstatemnet = TernaryOp(transformx(block.cond,[],[]),transformx(block.iftrue,[],ifwritten),transformx(block.iffalse,[],ifwritten))
+        else:
+            #if no else provided ,just use the written variables
+            ifstatemnet = TernaryOp(transformx(block.cond,[],[]),transformx(block.iftrue,[],ifwritten),ifwritten)
+       
         if nextblock ==[]:
+            for i in ifwritten:
+                if i not in written:
+                    written.append(i)
             next=written
         else:
             for i in ifwritten:
                 if i not in written:
                     written.append(i)
             next=transformx(nextblock[0],nextblock[1:],written)
-        
+        print(next)
         return Let(ifwritten,ifstatemnet,next) 
     if block.__class__.__name__ =="ID":
         #checkk id
@@ -133,7 +140,7 @@ def transformx(block,nextblock,written):
 
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    ast = parse_file('./input/p3_input3.c')
+    ast = parse_file('./input/p3_input6.c')
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
     print("written:")
