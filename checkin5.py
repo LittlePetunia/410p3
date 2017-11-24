@@ -120,8 +120,8 @@ def transformx(block,nextblock,written):
                 if i not in written:
                     written.append(i)
             next=transformx(nextblock[0],nextblock[1:],written)
-        #return Let(ifwritten,ifstatemnet,next)
-        return ifstatemnet 
+        return Let(ifwritten,ifstatemnet,next)
+        
     if block.__class__.__name__ =="ID":
         #checkk id
         return ID(block.name)
@@ -137,7 +137,23 @@ def transformx(block,nextblock,written):
         return FuncCall(transformx(block.name,[],written),args)
    
 
+def simplify(a):
+    lines =str(a).splitlines()
+    i=0
+    while( i in range(len(lines))):
+        if "Let" in lines[i]:
+            left=lines[i].split()[1]
+            right = lines[i].split()[3:]
+            print(left,right)
+            for rest in lines[i+1:]:
+                if left in rest.split():
+                    rest.replace("b", str(right))
+                    print(rest)
+                    break;
+            break;
 
+    return ""
+    #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
 
@@ -158,5 +174,10 @@ if __name__ == '__main__':
 
     # all above is print function prototype
     #--------------------------------------------
-    #print function body
-    print(transformx(ast2.ext[0].body,[],[]))
+    #print function body after transfrom by our own ast
+    a=transformx(ast2.ext[0].body,[],[])
+    print(a)
+
+    #print simplify str output
+    print("if (a==c) then (2*a) else (e)")
+    print(simplify(a))
