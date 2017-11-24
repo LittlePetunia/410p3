@@ -138,24 +138,35 @@ def transformx(block,nextblock,written):
    
 
 def simplify(a):
+    #get each line in function body
     lines =str(a).splitlines()
-    i=0
-    while( i in range(len(lines))):
+
+    #search from beginning
+    output =[]
+    for  i in range(len(lines)):
         if "Let" in lines[i]:
             left=lines[i].split()[1]
-            right = lines[i].split()[3:]
-            if 'in' in right:
-                right.remove('in')
-            print(left,right)
-            for rest in lines[i+1:]:
-                if left in rest.split():
-                    a=rest.replace("b", str(right))
+            
+            right = lines[i+1]
 
-                    print a
-                    break;
-            break;
+            if(i+2 <len(lines)):
+                #not last let statement
+                for rest in lines[i+2:]:
+                    if left in rest:
+                        a=rest.replace(left,right)
+                        output.append(a)
+            else:
+                #if it is the last let statement , just add the statement to output
+                output.append(lines[i])
+                output.append(lines[i+1])
+            i+=1        
+        else:
+            output.append(lines[i])
+        i +=1    
 
-    return ""
+    return output
+
+
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
