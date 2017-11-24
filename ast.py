@@ -340,10 +340,10 @@ class TernaryOp(Node):
 
     def __str__(self):
         if self.iffalse == None:
-            return "if  %s  \n then %s" %(self.cond, self.iftrue)
+            return "if  %s  \n then \n %s" %(self.cond, self.iftrue)
 
         else:
-            return "if  %s  \n then %s \n else %s" %(self.cond, self.iftrue, self.iffalse)
+            return "if  %s  \n then \n %s \n else %s" %(self.cond, self.iftrue, self.iffalse)
     attr_names = ()
 
 
