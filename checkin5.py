@@ -144,11 +144,14 @@ def simplify(a):
         if "Let" in lines[i]:
             left=lines[i].split()[1]
             right = lines[i].split()[3:]
+            if 'in' in right:
+                right.remove('in')
             print(left,right)
             for rest in lines[i+1:]:
                 if left in rest.split():
-                    rest.replace("b", str(right))
-                    print(rest)
+                    a=rest.replace("b", str(right))
+
+                    print a
                     break;
             break;
 
