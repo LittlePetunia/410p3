@@ -340,10 +340,10 @@ class TernaryOp(Node):
 
     def __str__(self):
         if self.iffalse == None:
-            return "if  %s  then %s" %(self.cond, self.iftrue)
+            return "if  %s  \n then %s" %(self.cond, self.iftrue)
 
         else:
-            return "if  %s  then %s else %s" %(self.cond, self.iftrue, self.iffalse)
+            return "if  %s  \n then %s \n else %s" %(self.cond, self.iftrue, self.iffalse)
     attr_names = ()
 
 
@@ -364,7 +364,7 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "Let %s = %s  in %s " %(self.identifier, self.lexpr,self.rexpr)
+        return "Let %s = %s  in \n %s " %(self.identifier, self.lexpr,self.rexpr)
 
         
     attr_names = ()
