@@ -3,4 +3,5 @@ void test(){
 	b=4;
 	c=b+3;
 	d = a+5;
+	e =a + b;
 }

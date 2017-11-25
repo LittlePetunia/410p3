@@ -151,27 +151,32 @@ def simplify(a):
     usedvalue = []
     writtenlines = []
     for i in range(len(lines) - 1):
-    	if "Let" in lines[i]:
-    		used1.append(lines[i].split()[1])
+        if "Let" in lines[i]:
+            used1.append(lines[i].split()[1])
     for i in range(len(lines) - 1):
-    	if "Let" in lines[i]:
-    		(var, value) = (lines[i].split()[1], lines[i ].split()[3])
-    		if used1.count(var) == 1:
-    			try:
-    				float(value)
-    				writtenlines.append(i)
-    				usedvar.append(var)
-    				usedvalue.append(value)
-    			except ValueError:
-    				last = last
+        if "Let" in lines[i]:
+            (var, value) = (lines[i].split()[1], lines[i ].split()[3])
+            if used1.count(var) == 1:
+                try:
+                    float(value)
+                    writtenlines.append(i)
+                    usedvar.append(var)
+                    usedvalue.append(value)
+                except ValueError:
+                    last = last
     for i in range(len(lines) - 1):
-    	if "Let" in lines[i]:
-    		for j in range(len(usedvar)):
-    			if usedvar[j] in lines[i].split("=")[1]:
-    				writtenlines.append(i)
-    				output += lines[i].replace(usedvar[j], usedvalue[j]) + "\n"
-    	if not i in writtenlines:
-    		output += lines[i] + "\n"
+        if "Let" in lines[i]:
+            single =0
+            for j in range(len(usedvar)):
+                if usedvar[j] in lines[i].split("=")[1]:
+                    single +=1
+                    writtenlines.append(i)
+                    lines[i] = lines[i].replace(usedvar[j], usedvalue[j]) + "\n"
+                    
+            if single > 0:
+                output+=lines[i]
+        if not i in writtenlines:
+            output += lines[i] + "\n"
     for i in range(len(usedvar)):
         if usedvar[i] not in usedvalue[i]:
             last[last.index(usedvar[i])] = usedvalue[i]
