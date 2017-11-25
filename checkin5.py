@@ -2,6 +2,7 @@
 from pycparser import parse_file
 
 import sys
+import numbers
 
 sys.path.append('./pyminic/minic/')
 from c_ast_to_minic import *
@@ -142,27 +143,40 @@ def simplify(a):
     lines =str(a).splitlines()
 
     #search from beginning
-    output =[]
-    for  i in range(len(lines)):
-        if "Let" in lines[i]:
-            left=lines[i].split()[1]
-            
-            right = lines[i+1]
+    output = ""
+    last = written
+    used1 = []
+    usedvar = []
+    usedvalue = []
+    writtenlines = []
+    for i in range(len(lines) - 1):
+    	if "Let" in lines[i]:
+    		used1.append(lines[i].split()[1])
+    for i in range(len(lines) - 1):
+    	if "Let" in lines[i]:
+    		(var, value) = (lines[i].split()[1], lines[i + 1].split()[0])
+    		if used1.count(var) == 1:
+    			try:
+    				float(value)
+    				last[last.index(var)] = value
+    				usedvar.append(var)
+    				usedvalue.append(value)
+    			except ValueError:
+    				last = last
+    for i in range(len(lines) - 1):
+    	if "in" in lines[i]:
+    		for j in range(len(usedvar)):
+    			if usedvar[j] in lines[i].split("in")[0]:
+    				writtenlines.append(i)
+    				output += lines[i].replace(usedvar[j], usedvalue[j]) + "\n"
+    	if not i in writtenlines:
+    		output += lines[i] + "\n"
+    output += str(last)
 
-            if(i+2 <len(lines)):
-                #not last let statement
-                for rest in lines[i+2:]:
-                    if left in rest:
-                        a=rest.replace(left,right)
-                        output.append(a)
-            else:
-                #if it is the last let statement , just add the statement to output
-                output.append(lines[i])
-                output.append(lines[i+1])
-            i+=1        
-        else:
-            output.append(lines[i])
-        i +=1    
+
+
+
+
 
     return output
 
@@ -171,8 +185,8 @@ def simplify(a):
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
 
-    ast = parse_file('./input/p3_input3.c')
-    with open('./input/p3_input3.c', 'r') as f:
+    ast = parse_file('./input/p3_input2.c')
+    with open('./input/p3_input2.c', 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
         for line in lineArr:
