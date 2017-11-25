@@ -154,21 +154,20 @@ def simplify(a):
     		used1.append(lines[i].split()[1])
     for i in range(len(lines) - 1):
     	if "Let" in lines[i]:
-    		(var, value) = (lines[i].split()[1], lines[i + 1].split()[0])
+    		(var, value) = (lines[i].split()[1], lines[i ].split()[3])
     		if used1.count(var) == 1:
     			try:
     				float(value)
     				last[last.index(var)] = value
     				writtenlines.append(i)
-    				writtenlines.append(i + 1)
     				usedvar.append(var)
     				usedvalue.append(value)
     			except ValueError:
     				last = last
     for i in range(len(lines) - 1):
-    	if "in" in lines[i]:
+    	if "Let" in lines[i]:
     		for j in range(len(usedvar)):
-    			if usedvar[j] in lines[i].split("in")[0]:
+    			if usedvar[j] in lines[i].split("=")[1]:
     				writtenlines.append(i)
     				output += lines[i].replace(usedvar[j], usedvalue[j]) + "\n"
     	if not i in writtenlines:
@@ -187,7 +186,7 @@ def simplify(a):
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
 
-    ast = parse_file('./input/p3_input3.c')
+    ast = parse_file('./input/p3_input2.c')
     with open('./input/p3_input2.c', 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
