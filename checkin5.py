@@ -187,7 +187,7 @@ def simplify(a):
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
 
-    ast = parse_file('./input/p3_input2.c')
+    ast = parse_file('./input/p3_input3.c')
     with open('./input/p3_input2.c', 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
