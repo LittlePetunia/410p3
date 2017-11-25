@@ -159,6 +159,8 @@ def simplify(a):
     			try:
     				float(value)
     				last[last.index(var)] = value
+    				writtenlines.append(i)
+    				writtenlines.append(i + 1)
     				usedvar.append(var)
     				usedvalue.append(value)
     			except ValueError:
