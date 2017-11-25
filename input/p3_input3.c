@@ -1,6 +1,6 @@
 void test(){
-	b = a == c;
-	if(b) {	
-		e = 2*a;
-	}
+	a= 5 ;
+	b=4;
+	c=b+3;
+	d = a+5;
 }

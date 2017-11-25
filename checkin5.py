@@ -159,7 +159,6 @@ def simplify(a):
     		if used1.count(var) == 1:
     			try:
     				float(value)
-    				last[last.index(var)] = value
     				writtenlines.append(i)
     				usedvar.append(var)
     				usedvalue.append(value)
@@ -173,22 +172,22 @@ def simplify(a):
     				output += lines[i].replace(usedvar[j], usedvalue[j]) + "\n"
     	if not i in writtenlines:
     		output += lines[i] + "\n"
+    for i in range(len(usedvar)):
+        if usedvar[i] not in usedvalue[i]:
+            last[last.index(usedvar[i])] = usedvalue[i]
     output += str(last)
     return output
 
-def simplify1(a):
-    #rule A variable that is only bound once to a constant can be replaced by this constant in its scope
-    #get each line in function body
-    lines =str(a).splitlines()
 
-    return lines
+
+    
 
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
 
-    ast = parse_file('./input/p3_input2.c')
-    with open('./input/p3_input2.c', 'r') as f:
+    ast = parse_file('./input/p3_input3.c')
+    with open('./input/p3_input3.c', 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
         for line in lineArr:
@@ -212,4 +211,5 @@ if __name__ == '__main__':
     print("=======================")
     a= simplify(a)
     print(a)
-    print(simplify1(a))
+    print("=======================")
+
