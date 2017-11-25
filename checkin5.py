@@ -176,13 +176,19 @@ def simplify(a):
     output += str(last)
     return output
 
+def simplify1(a):
+    #rule A variable that is only bound once to a constant can be replaced by this constant in its scope
+    #get each line in function body
+    lines =str(a).splitlines()
+
+    return lines
 
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
 
-    ast = parse_file('./input/p3_input3.c')
-    with open('./input/p3_input3.c', 'r') as f:
+    ast = parse_file('./input/p3_input2.c')
+    with open('./input/p3_input2.c', 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
         for line in lineArr:
@@ -204,4 +210,6 @@ if __name__ == '__main__':
 
     #print simplify str output
     print("=======================")
-    print(simplify(a))
+    a= simplify(a)
+    print(a)
+    print(simplify1(a))
