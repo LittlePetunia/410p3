@@ -167,14 +167,15 @@ def simplify(a):
     for i in range(len(lines) - 1):
         if "Let" in lines[i]:
             single =0
+            a= lines[i]
             for j in range(len(usedvar)):
                 if usedvar[j] in lines[i].split("=")[1]:
                     single +=1
                     writtenlines.append(i)
-                    lines[i] = lines[i].replace(usedvar[j], usedvalue[j]) + "\n"
+                    a = a.replace(usedvar[j], usedvalue[j]) 
                     
             if single > 0:
-                output+=lines[i]
+                output+=a + "\n"
         if not i in writtenlines:
             output += lines[i] + "\n"
     for i in range(len(usedvar)):
