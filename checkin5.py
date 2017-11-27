@@ -9,6 +9,7 @@ from c_ast_to_minic import *
 # from minic_ast import *
 from ast import *
 sys.path.extend(['.','..'])
+import os
 
 written=[]
 vas=[]
@@ -194,9 +195,10 @@ def simplify(a):
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-
-    ast = parse_file('./input/p3_input3.c')
-    with open('./input/p3_input3.c', 'r') as f:
+    inputFile = raw_input("type the input c file in input folder (e.g. p3_input3.c) :")
+    print(inputFile)
+    ast = parse_file('./input/' +inputFile)
+    with open('./input/'+inputFile, 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
         for line in lineArr:
@@ -217,8 +219,8 @@ if __name__ == '__main__':
     print(a)
 
     #print simplify str output
-    print("=======================")
+    print("=========simplify==============")
     a= simplify(a)
     print(a)
-    print("=======================")
+    print("===============================")
 
