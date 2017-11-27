@@ -176,6 +176,9 @@ def simplify(a):
                     
             if single > 0:
                 output+=a + "\n"
+        if "if" in lines[i]:
+            writtenlines.append(i)
+            output += "if " +lines[i].split("if")[1] +"\n"
         if not i in writtenlines:
             output += lines[i] + "\n"
     for i in range(len(usedvar)):
