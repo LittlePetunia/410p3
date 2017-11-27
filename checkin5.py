@@ -188,17 +188,29 @@ def simplify(a):
     output += str(last)
     return output
 
+def makec(file):
 
+    f=open('./input/'+file,'r')
+    input = f.read()
+    f.close()
+    
+    filename =file +".c"
 
+    f=open('./input/'+filename,'w+')
+    f.write("void test(){\n" +input +"\n}")
+    f.close()
+
+    return filename
     
 
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile = raw_input("type the input c file in input folder (e.g. p3_input3.c) :")
-    print(inputFile)
-    ast = parse_file('./input/' +inputFile)
-    with open('./input/'+inputFile, 'r') as f:
+    inputFile = raw_input("type the input file in input folder (e.g. p3_input3) :")
+    File = makec(inputFile)
+    print(File)
+    ast = parse_file('./input/' +File)
+    with open('./input/'+File, 'r') as f:
         lineArr=f.read().split('\n')
         print "=======input======="
         for line in lineArr:

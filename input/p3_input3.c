@@ -1,5 +1,5 @@
 void test(){
-	b = a == c;
+b = a == c;
 if(b) {
       e = 2*a;
 }
