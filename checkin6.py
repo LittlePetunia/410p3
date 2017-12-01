@@ -166,7 +166,7 @@ def transformx(block,nextblock,written,loopnum):
                     written.append(i)
             next=transformx(nextblock[0],nextblock[1:],written,loopnum+1)
         #add init to the very first
-        return transformx(Block([block.init]+[Letrec('loop'+str(loopnum), forwritten, makeif, next)]),[],[])
+        return transformx(Block([block.init]+[Letrec('loop'+str(loopnum), forwritten, makeif, next)]),[],[],loopnum)
 
         
     if block.__class__.__name__ =="While":

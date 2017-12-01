@@ -1,5 +1,8 @@
 while (i < n) {
 	sum = sum + a[i];
+	while(j<n){
+		j++;
+	}
 	i++;
 }
 k = 1;
