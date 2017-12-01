@@ -71,7 +71,7 @@ def transformx(block,nextblock,written,loopnum):
         for i in range(len(block.block_items)):
             #linked in next block statemnet
             if (len(block.block_items) >0):
-                return transformx(block.block_items[i],block.block_items[i+1:],written)
+                return transformx(block.block_items[i],block.block_items[i+1:],written,loopnum)
     if block.__class__.__name__ =="Assignment":
         
         if nextblock ==[]:
@@ -83,12 +83,12 @@ def transformx(block,nextblock,written,loopnum):
              #check if there is not only 1 assignment left
             if block.lvalue.name not in written:
                 written.append(block.lvalue.name)
-            next =transformx(nextblock[0],nextblock[1:],written)
-        return Let(transformx(block.lvalue,[],written), transformx(block.rvalue,[],written),next)
+            next =transformx(nextblock[0],nextblock[1:],written,loopnum)
+        return Let(transformx(block.lvalue,[],written,loopnum), transformx(block.rvalue,[],written,loopnum),next)
 
     if block.__class__.__name__ == "BinaryOp":
         #check binaryop
-        return BinaryOp(block.op,transformx(block.left,[],written),transformx(block.right,[],written))        
+        return BinaryOp(block.op,transformx(block.left,[],written,loopnum),transformx(block.right,[],written,loopnum))        
     if block.__class__.__name__ =="Constant":
         #check constant
         return Constant(block.type,block.value)
@@ -108,10 +108,10 @@ def transformx(block,nextblock,written,loopnum):
                 if i.__class__.__name__=="Assignment":
                     if i.lvalue.name not in ifwritten:
                         ifwritten.append(i.lvalue.name)
-            ifstatemnet = TernaryOp(transformx(block.cond,[],[]),transformx(block.iftrue,[],ifwritten),transformx(block.iffalse,[],ifwritten))
+            ifstatemnet = TernaryOp(transformx(block.cond,[],[],loopnum),transformx(block.iftrue,[],ifwritten,loopnum),transformx(block.iffalse,[],ifwritten,loopnum),loopnum)
         else:
             #if no else provided ,just use the written variables
-            ifstatemnet = TernaryOp(transformx(block.cond,[],[]),transformx(block.iftrue,[],ifwritten),ifwritten)
+            ifstatemnet = TernaryOp(transformx(block.cond,[],[],loopnum),transformx(block.iftrue,[],ifwritten,loopnum),ifwritten,loopnum)
        
         if nextblock ==[]:
             for i in ifwritten:
@@ -122,7 +122,7 @@ def transformx(block,nextblock,written,loopnum):
             for i in ifwritten:
                 if i not in written:
                     written.append(i)
-            next=transformx(nextblock[0],nextblock[1:],written)
+            next=transformx(nextblock[0],nextblock[1:],written,loopnum)
         return Let(ifwritten,ifstatemnet,next)
         
     if block.__class__.__name__ =="ID":
@@ -131,13 +131,13 @@ def transformx(block,nextblock,written,loopnum):
 
     if block.__class__.__name__ =="ArrayRef":
         #check arrayref
-        return ArrayRef(transformx(block.name,[],written),transformx(block.subscript,[],written))
+        return ArrayRef(transformx(block.name,[],written,loopnum),transformx(block.subscript,[],written,loopnum))
     if block.__class__.__name__ =="FuncCall":
         #check functioncall return function call str
         args=[]
         for i in block.args.exprs:
-            args.append(transformx(i,[],written))
-        return FuncCall(transformx(block.name,[],written),args)
+            args.append(transformx(i,[],written,loopnum))
+        return FuncCall(transformx(block.name,[],written,loopnum),args)
     if block.__class__.__name__ =="For":
         forwritten =[]
         #always add init assignment into written variables
@@ -148,10 +148,10 @@ def transformx(block,nextblock,written,loopnum):
                 if i.lvalue.name not in forwritten:
                     forwritten.append(i.lvalue.name)
 
-        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],[])
+        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],[],loopnum)
         letinit = Let(forwritten,stmt,["loop"+str(0)] +forwritten)
 
-        cond = transformx(block.cond,[],[])
+        cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,letinit,forwritten)
 
         if nextblock ==[]:
@@ -163,9 +163,9 @@ def transformx(block,nextblock,written,loopnum):
             for i in forwritten:
                 if i not in written:
                     written.append(i)
-            next=transformx(nextblock[0],nextblock[1:],written)
+            next=transformx(nextblock[0],nextblock[1:],written,loopnum)
         #add init to the very first
-        return transformx(Block([block.init]+[Letrec('loop0', forwritten, makeif, next)]),[],[])
+        return transformx(Block([block.init]+[Letrec('loop0', forwritten, makeif, next)]),[],[],loopnum)
         
     if block.__class__.__name__ =="While":
         whilewritten =[]
@@ -174,9 +174,9 @@ def transformx(block,nextblock,written,loopnum):
                 if i.lvalue.name not in whilewritten:
                     whilewritten.append(i.lvalue.name)
 
-        stmt = transformx(block.stmt,[],[])
+        stmt = transformx(block.stmt,[],[],loopnum)
         letinit = Let(whilewritten,stmt,["loop"+str(0)] +whilewritten)
-        cond = transformx(block.cond,[],[])
+        cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,letinit,whilewritten)
 
         if nextblock ==[]:
@@ -188,9 +188,9 @@ def transformx(block,nextblock,written,loopnum):
             for i in whilewritten:
                 if i not in written:
                     written.append(i)
-            next=transformx(nextblock[0],nextblock[1:],written)
+            next=transformx(nextblock[0],nextblock[1:],written,loopnum)
 
-        return transformx(Letrec('loop0', whilewritten, makeif, next),[],[])
+        return transformx(Letrec('loop0', whilewritten, makeif, next),[],[],loopnum)
 
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
         return block
@@ -235,7 +235,7 @@ if __name__ == '__main__':
     # all above is print function prototype
     #--------------------------------------------
     #print function body after transfrom by our own ast
-    a=transformx(ast2.ext[0].body,[],[])
+    a=transformx(ast2.ext[0].body,[],[],0)
     print(a)
 
 
