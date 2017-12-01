@@ -220,7 +220,7 @@ def makec(file):
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile = raw_input("type the input file in input folder (e.g. p3_input3) :")
+    inputFile = raw_input("type the input file in input folder (e.g. p3_input6  while loop, p3_input9 for loop) :")
     File = makec(inputFile)
     print(File)
     ast = parse_file('./input/' +File)
