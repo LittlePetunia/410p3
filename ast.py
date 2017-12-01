@@ -387,5 +387,14 @@ class Letrec(Node):
         nodelist.append(("lexpr", self.lexpr))
         nodelist.append(("rexpr:", self.rexpr))
         return tuple(nodelist)
+
+    def __str__(self):
+        arg = ""
+        alist=[arg+" "+ str(a) for a in self.args][1:]
+
+        output = str(self.ident) + " " + alist + " = \n"
+        output += str(self.lexpr) + "\n"
+        output += str(self.right) 
+        return output
         
     attr_names = ()
