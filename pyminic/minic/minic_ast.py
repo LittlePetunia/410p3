@@ -9,7 +9,7 @@
 
 
 import sys
-
+import mutils
 
 class Node(object):
     __slots__ = ()
@@ -216,6 +216,9 @@ class Block(Node):
         for i, child in enumerate(self.block_items or []):
             nodelist.append(("block_items[%d]" % i, child))
         return tuple(nodelist)
+
+    def __str__(self):
+        return "\n".join(mutils.lmap(str, self.block_items))
 
     attr_names = ()
 

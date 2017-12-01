@@ -143,3 +143,20 @@ def transform(x):
 
 def minic_parse_file(filename):
     return transform(parse_file(filename))
+
+
+def wrap(filename):
+    infile = open(filename, 'r')
+    outfilename = filename+'_wrap.c'
+    outfile = open(outfilename, 'w')
+    outfile.write("void main(){\n")
+    for line in infile:
+        outfile.write("\t" + line)
+    outfile.write("}\n")
+    outfile.close()
+    infile.close()
+    return outfilename
+
+
+def minic_parse_wrap_file(filename):
+    return transform(parse_file(wrap(filename)))

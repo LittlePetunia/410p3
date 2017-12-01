@@ -2,6 +2,7 @@ from __future__ import print_function
 import unittest
 import minic.c_ast_to_minic as ctoc
 import minic.minic_ast as mast
+import minic.mutils as uts
 
 
 class TestConversion1(unittest.TestCase):
@@ -40,3 +41,19 @@ class TestConversion1(unittest.TestCase):
     def test_parse_and_convert_constructs(self):
         ast = ctoc.minic_parse_file('./c_files/constructs.c')
         self.failUnless(isinstance(ast, mast.FileAST))
+
+    def test_parse_and_convert_p1(self):
+        for file in uts.locate(r'p1_input\d\.c', './c_files/'):
+            print(file)
+            ast = ctoc.minic_parse_file(file)
+            self.failUnless(isinstance(ast, mast.FileAST))
+        print("  ....OK")
+
+    def test_parse_and_convert_p3(self):
+        for file in uts.locate(r'p3_input\d', './c_files/'):
+            print(file)
+            ast = ctoc.minic_parse_wrap_file(file)
+            initialblock = ast.ext[0].body
+            self.failUnless(isinstance(ast, mast.FileAST))
+            if initialblock.block_items is None or len(initialblock.block_items) < 1 :
+                self.fail(file)

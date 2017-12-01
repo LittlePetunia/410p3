@@ -38,14 +38,14 @@ class ReachingDefsSet(object):
         self.rdefs[vname] = [sid]
 
     def update_add(self, vname, sid):
-        if self.rdefs.has_key(vname):
+        if vname in self.rdefs:
             self.rdefs[vname].append(sid)
         else:
             self.rdefs[vname] = [sid]
 
     def update_addall(self, ordefs):
         for k in ordefs.rdefs.keys():
-            if self.rdefs.has_key(k):
+            if k in self.rdefs:
                 ordefs.rdefs[k].extend(self.rdefs[k])
 
         self.rdefs.update(ordefs.rdefs)
