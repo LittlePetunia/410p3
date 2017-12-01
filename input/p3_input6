@@ -1,7 +1,5 @@
-a = b;
-if(c=a+b){
-	a = 0;
+while (i < n) {
+	sum = sum + a[i];
+	i++;
 }
-else{
-	b = 0;
-}
+k = 1;

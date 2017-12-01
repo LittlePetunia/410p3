@@ -164,10 +164,36 @@ def transformx(block,nextblock,written):
                 if i not in written:
                     written.append(i)
             next=transformx(nextblock[0],nextblock[1:],written)
+        #add init to the very first
+        return transformx(Block([block.init]+[Letrec('loop0', forwritten, makeif, next)]),[],[])
+        
+    if block.__class__.__name__ =="While":
+        whilewritten =[]
+        for i in block.stmt.block_items:
+            if i.__class__.__name__ =="Assignment":
+                if i.lvalue.name not in whilewritten:
+                    whilewritten.append(i.lvalue.name)
 
-        print forwritten,makeif,next
-        return Letrec('loop0', forwritten, makeif, next)
+        stmt = transformx(block.stmt,[],[])
+        letinit = Let(whilewritten,stmt,["loop"+str(0)] +whilewritten)
+        cond = transformx(block.cond,[],[])
+        makeif = TernaryOp(cond,letinit,whilewritten)
 
+        if nextblock ==[]:
+            for i in whilewritten:
+                if i not in written:
+                    written.append(i)
+            next=written
+        else:
+            for i in whilewritten:
+                if i not in written:
+                    written.append(i)
+            next=transformx(nextblock[0],nextblock[1:],written)
+
+        return transformx(Letrec('loop0', whilewritten, makeif, next),[],[])
+        
+    if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
+        return block
 
 
 def makec(file):
