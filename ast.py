@@ -390,11 +390,12 @@ class Letrec(Node):
 
     def __str__(self):
         arg = ""
-        alist=[arg+" "+ str(a) for a in self.args][1:]
+        alist=[arg+" "+ str(a) for a in self.args]
 
-        output = "letrec "+ str(self.identifier) + " " + str(alist) + " = \n"
-        output += str(self.lexpr) + "\n"
-        output += str(self.rexpr) + "in \n"
+        output = "letrec "+ str([self.identifier]+alist) + " = \n"
+        output += "  "+ str(self.lexpr) + "  in \n"
+        output += "  "+str(self.rexpr) + " \n"
+        # output += "in \n"
         return output
         
     attr_names = ()
