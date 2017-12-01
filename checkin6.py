@@ -148,10 +148,10 @@ def transformx(block,nextblock,written,loopnum):
                 if i.lvalue.name not in forwritten:
                     forwritten.append(i.lvalue.name)
 
-        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],[])
-        letinit = Let(forwritten,stmt,["loop"+str(0)] +forwritten)
+        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],[],loopnum+1)
+        letinit = Let(forwritten,stmt,["loop"+str(loopnum)] +forwritten)
 
-        cond = transformx(block.cond,[],[])
+        cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,letinit,forwritten)
 
         if nextblock ==[]:
@@ -163,9 +163,9 @@ def transformx(block,nextblock,written,loopnum):
             for i in forwritten:
                 if i not in written:
                     written.append(i)
-            next=transformx(nextblock[0],nextblock[1:],written)
+            next=transformx(nextblock[0],nextblock[1:],written,loopnum+1)
         #add init to the very first
-        return transformx(Block([block.init]+[Letrec('loop0', forwritten, makeif, next)]),[],[])
+        return transformx(Block([block.init]+[Letrec('loop'+str(loopnum), forwritten, makeif, next)]),[],[])
         
     if block.__class__.__name__ =="While":
         whilewritten =[]
@@ -174,9 +174,9 @@ def transformx(block,nextblock,written,loopnum):
                 if i.lvalue.name not in whilewritten:
                     whilewritten.append(i.lvalue.name)
 
-        stmt = transformx(block.stmt,[],[])
-        letinit = Let(whilewritten,stmt,["loop"+str(0)] +whilewritten)
-        cond = transformx(block.cond,[],[])
+        stmt = transformx(block.stmt,[],[],loopnum+1)
+        letinit = Let(whilewritten,stmt,["loop"+str(loopnum)] +whilewritten)
+        cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,letinit,whilewritten)
 
         if nextblock ==[]:
@@ -188,9 +188,9 @@ def transformx(block,nextblock,written,loopnum):
             for i in whilewritten:
                 if i not in written:
                     written.append(i)
-            next=transformx(nextblock[0],nextblock[1:],written)
+            next=transformx(nextblock[0],nextblock[1:],written,loopnum+1)
 
-        return transformx(Letrec('loop0', whilewritten, makeif, next),[],[])
+        return transformx(Letrec('loop'+str(loopnum), whilewritten, makeif, next),[],[],loopnum)
 
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
         return block
@@ -235,7 +235,7 @@ if __name__ == '__main__':
     # all above is print function prototype
     #--------------------------------------------
     #print function body after transfrom by our own ast
-    a=transformx(ast2.ext[0].body,[],[])
+    a=transformx(ast2.ext[0].body,[],[],0)
     print(a)
 
 
