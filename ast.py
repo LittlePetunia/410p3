@@ -392,9 +392,28 @@ class Letrec(Node):
         arg = ""
         alist=[arg+" "+ str(a) for a in self.args][1:]
 
-        output = str(self.ident) + " " + alist + " = \n"
+        output = "letrec "+ str(self.identifier) + " " + str(alist) + " = \n"
         output += str(self.lexpr) + "\n"
-        output += str(self.right) 
+        output += str(self.rexpr) + "in \n"
         return output
         
+    attr_names = ()
+
+class Block(Node):
+    __slots__ = ('block_items', 'coord', '__weakref__', 'nid')
+
+    def __init__(self, block_items, coord=None, nid=None):
+        self.block_items = block_items
+        self.coord = coord
+        self.nid = nid
+
+    def children(self):
+        nodelist = []
+        for i, child in enumerate(self.block_items or []):
+            nodelist.append(("block_items[%d]" % i, child))
+        return tuple(nodelist)
+
+    def __str__(self):
+        return "\n".join(mutils.lmap(str, self.block_items))
+
     attr_names = ()

@@ -8,6 +8,7 @@ sys.path.append('./pyminic/minic/')
 from c_ast_to_minic import *
 # from minic_ast import *
 from ast import *
+
 sys.path.extend(['.','..'])
 import os
 
@@ -147,81 +148,27 @@ def transformx(block,nextblock,written):
                 if i.lvalue.name not in forwritten:
                     forwritten.append(i.lvalue.name)
 
-        stmt = transformx(block.stmt,[],[])
+        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],[])
+        letinit = Let(forwritten,stmt,["loop"+str(0)] +forwritten)
 
-        
+        cond = transformx(block.cond,[],[])
+        makeif = TernaryOp(cond,letinit,forwritten)
 
-def looprecursion(block,loopnum):
+        if nextblock ==[]:
+            for i in forwritten:
+                if i not in written:
+                    written.append(i)
+            next=written
+        else:
+            for i in forwritten:
+                if i not in written:
+                    written.append(i)
+            next=transformx(nextblock[0],nextblock[1:],written)
 
-    return "hi"
+        print forwritten,makeif,next
+        return Letrec('loop0', forwritten, makeif, next)
 
-def simplify(a):
-    #rule A variable that is only bound once to a constant can be replaced by this constant in its scope
-    #get each line in function body
-    lines =str(a).splitlines()
 
-    #search from beginning
-    output = ""
-    outputif = ""
-    last = written
-    used1 = []
-    usedvar = []
-    usedvalue = []
-    writtenlines = []
-    ifused = False
-    for i in range(len(lines) - 1):
-        if "Let" in lines[i]:
-            used1.append(lines[i].split()[1])
-    for i in range(len(lines) - 1):
-        if "Let" in lines[i]:
-            (var, value) = (lines[i].split()[1], lines[i ].split()[3])
-            if used1.count(var) == 1:
-                try:
-                    float(value)
-                    writtenlines.append(i)
-                    usedvar.append(var)
-                    usedvalue.append(value)
-                except ValueError:
-                    last = last
-    for i in range(len(lines) - 1):
-        if "Let" in lines[i]:
-            single =0
-            a= lines[i]
-            for j in range(len(usedvar)):
-                if usedvar[j] in lines[i].split("=")[1]:
-                    single +=1
-                    writtenlines.append(i)
-                    a = a.replace(usedvar[j], usedvalue[j]) 
-                    
-            if single > 0:
-                output+=a + "\n"
-        if "if" in lines[i]:
-            writtenlines.append(i)
-            output += "if " +lines[i].split("if")[1] +"\n"
-        if not i in writtenlines:
-            output += lines[i] + "\n"
-    for i in range(len(usedvar)):
-        if usedvar[i] not in usedvalue[i]:
-            last[last.index(usedvar[i])] = usedvalue[i]
-    output += str(last)
-    lines = output.splitlines()
-    for i in range(len(lines) - 1):
-    	if "if" in lines[i]:
-    		for line in lines[:i]:
-    			outputif += line
-    		startif = [i]
-    		ifused = True
-    		cond = lines[i].split("if")[1]
-    		oldif = lines[i + 2].split("=")[0].split("Let")[1].strip()
-    		newif = lines[i + 2].split("=")[1].split("in")[0][1:].strip().strip('()')
-    		if "Let" in lines[i + 5]:
-    			oldelse = lines[i + 5].split("=")[0].split("Let")[1].strip()
-    			newelse = lines[i + 5].split("=")[1].split("in")[0][1:].strip().strip('()')
-    			outputif += "if" + cond + "then " + str(last).replace(oldif, newif) + " else " + str(last).replace(oldelse, newelse)
-    		else:
-    			newelse = lines[i + 5].strip("[]'' ")
-    			outputif += "if" + cond + "then " + str(last).replace(oldif, newif) + " else " + str(last).replace(oldif, newelse)
-    return outputif
 
 def makec(file):
 
@@ -265,8 +212,7 @@ if __name__ == '__main__':
     a=transformx(ast2.ext[0].body,[],[])
     print(a)
 
-    #print simplify str output
-    print("=========simplify==============")
+
     
     print("===============================")
 
