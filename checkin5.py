@@ -146,11 +146,13 @@ def simplify(a):
 
     #search from beginning
     output = ""
+    outputif = ""
     last = written
     used1 = []
     usedvar = []
     usedvalue = []
     writtenlines = []
+    ifused = False
     for i in range(len(lines) - 1):
         if "Let" in lines[i]:
             used1.append(lines[i].split()[1])
@@ -186,7 +188,24 @@ def simplify(a):
         if usedvar[i] not in usedvalue[i]:
             last[last.index(usedvar[i])] = usedvalue[i]
     output += str(last)
-    return output
+    lines = output.splitlines()
+    for i in range(len(lines) - 1):
+    	if "if" in lines[i]:
+    		for line in lines[:i]:
+    			outputif += line
+    		startif = [i]
+    		ifused = True
+    		cond = lines[i].split("if")[1]
+    		oldif = lines[i + 2].split("=")[0].split("Let")[1].strip()
+    		newif = lines[i + 2].split("=")[1].split("in")[0][1:].strip().strip('()')
+    		if "Let" in lines[i + 5]:
+    			oldelse = lines[i + 5].split("=")[0].split("Let")[1].strip()
+    			newelse = lines[i + 5].split("=")[1].split("in")[0][1:].strip().strip('()')
+    			outputif += "if" + cond + "then " + str(last).replace(oldif, newif) + " else " + str(last).replace(oldelse, newelse)
+    		else:
+    			newelse = lines[i + 5].strip("[]'' ")
+    			outputif += "if" + cond + "then " + str(last).replace(oldif, newif) + " else " + str(last).replace(oldif, newelse)
+    return outputif
 
 def makec(file):
 
