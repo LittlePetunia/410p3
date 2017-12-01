@@ -65,7 +65,7 @@ class FunctionPrototype(NodeVisitor):
         
 
 
-def transformx(block,nextblock,written):
+def transformx(block,nextblock,written,loopnum):
     #check whether it is block list or other class"
     if block.__class__.__name__ == "Block":
         for i in range(len(block.block_items)):
@@ -191,7 +191,7 @@ def transformx(block,nextblock,written):
             next=transformx(nextblock[0],nextblock[1:],written)
 
         return transformx(Letrec('loop0', whilewritten, makeif, next),[],[])
-        
+
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
         return block
 
