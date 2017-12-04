@@ -232,19 +232,17 @@ if __name__ == '__main__':
   
     ast2 = transform(ast)
     FunctionDefVisitor2().visit(ast2)
+    print("=============variables========")
     print("written:")
     print(written)
-    print("varaibles:") 
+    print("variables:") 
     print(vas)
+    print("=============function==========")
     FunctionPrototype().__str__()
 
     # all above is print function prototype
     #--------------------------------------------
     #print function body after transfrom by our own ast
+    print("==============transform===========")
     a=transformx(ast2.ext[0].body,[],[],0)
     print(a)
-
-
-    
-    print("===============================")
-
