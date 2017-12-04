@@ -9,6 +9,7 @@
 
 
 import sys
+import re
 
 
 class Node(object):
@@ -364,7 +365,8 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        return "Let %s =  %s  in \n %s " %(self.identifier, self.lexpr,self.rexpr)
+        output = "Let %s =  %s  in \n %s " %(self.identifier, self.lexpr,self.rexpr)
+        return list_to_tuple(output)
 
         
     attr_names = ()
@@ -391,12 +393,16 @@ class Letrec(Node):
     def __str__(self):
         arg = ""
         alist=[arg+" "+ str(a) for a in self.args]
+        # llist=[str(exp) for exp in self.lexpr]
+        # rlist=[str(exp) for exp in self.rexpr]
 
-        output = "letrec "+ str([self.identifier]+alist) + " = \n"
+        # output = "letrec "+ str([self.identifier]+alist) + " = \n"
+        # output += "  "+ str(self.lexpr) + "  in \n"
+        # output += "  "+str(self.rexpr) + " \n"
+        output = "letrec "+ str(self.identifier) + " " + str(tuple(alist)) + " = \n"
         output += "  "+ str(self.lexpr) + "  in \n"
-        output += "  "+str(self.rexpr) + " \n"
-        # output += "in \n"
-        return output
+        output += "  "+ str(self.rexpr) + " \n"
+        return list_to_tuple(output)
         
     attr_names = ()
 
@@ -418,3 +424,9 @@ class Block(Node):
         return "\n".join(mutils.lmap(str, self.block_items))
 
     attr_names = ()
+
+def list_to_tuple(input):
+    replace =  re.sub(r'\[\b','(',input)
+    return re.sub(r'\]\b',')',input)
+
+
