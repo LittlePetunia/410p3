@@ -1,0 +1,10 @@
+sum = 0;
+cond = 1;
+for(i=0; i<n; i++){
+    if((cond == 1) && a[i] < 0) {
+        cond = -1;
+	sum = sum - a[i];
+    } else {
+        sum = sum + a[i];
+    }
+}
