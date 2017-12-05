@@ -148,25 +148,29 @@ def transformx(block,nextblock,written,loopnum):
                 if i.lvalue.name not in forwritten:
                     forwritten.append(i.lvalue.name)
 
-        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],[],loopnum+1)
-        letinit = Let(forwritten,stmt,["loop"+str(loopnum)] +forwritten)
+        stmt = transformx(Block(block.stmt.block_items+[block.next]),[],["loop"+str(loopnum)],loopnum+1)
+        
 
 
         cond = transformx(block.cond,[],[],loopnum)
-        makeif = TernaryOp(cond,letinit,forwritten)
-
+        makeif = TernaryOp(cond,stmt,forwritten)
+        
         if nextblock ==[]:
             for i in forwritten:
                 if i not in written:
                     written.append(i)
             next=written
+            next.append("loop"+str(loopnum))
         else:
             for i in forwritten:
                 if i not in written:
                     written.append(i)
             next=transformx(nextblock[0],nextblock[1:],written,loopnum+1)
         #add init to the very first
-        return transformx(Block([block.init]+[Letrec('loop'+str(loopnum), forwritten, makeif, next)]),[],[],loopnum)
+        
+        letre =Letrec('loop'+str(loopnum), forwritten, makeif, next)
+        letinit = Let(forwritten,letre,forwritten)
+        return transformx(Block([block.init]+[letinit]),[],[],loopnum)
 
         
     if block.__class__.__name__ =="While":
@@ -195,7 +199,7 @@ def transformx(block,nextblock,written,loopnum):
 
             next=transformx(nextblock[0],nextblock[1:],written,loopnum+1)
 
-        return transformx(Letrec('loop'+str(loopnum), whilewritten, makeif, next),[],[],loopnum)
+        return Letrec('loop'+str(loopnum), whilewritten, makeif, next)
 
 
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
@@ -220,7 +224,8 @@ def makec(file):
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile = raw_input("type the input file in input folder (e.g. p3_input6  while loop, p3_input9 for loop) :")
+    inputFile = "p3_input5"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
+
     File = makec(inputFile)
     print(File)
     ast = parse_file('./input/' +File)

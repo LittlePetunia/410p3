@@ -340,6 +340,9 @@ class TernaryOp(Node):
         return tuple(nodelist)
 
     def __str__(self):
+        if isinstance(self.iffalse, list):
+            self.iffalse=tuple(self.iffalse)
+
         if self.iffalse == None:
             return "if  %s  \n then \n %s" %(self.cond, self.iftrue)
 
@@ -365,6 +368,11 @@ class Let(Node):
         return tuple(nodelist)
 
     def __str__(self):
+        if isinstance(self.identifier, list):
+            self.identifier=tuple(self.identifier)
+        if isinstance(self.rexpr,list):
+            self.rexpr=tuple(self.rexpr)
+
         output = "Let %s =  %s  in \n %s " %(self.identifier, self.lexpr,self.rexpr)
         return list_to_tuple(output)
 
@@ -393,12 +401,8 @@ class Letrec(Node):
     def __str__(self):
         arg = ""
         alist=[arg+" "+ str(a) for a in self.args]
-        # llist=[str(exp) for exp in self.lexpr]
-        # rlist=[str(exp) for exp in self.rexpr]
-
-        # output = "letrec "+ str([self.identifier]+alist) + " = \n"
-        # output += "  "+ str(self.lexpr) + "  in \n"
-        # output += "  "+str(self.rexpr) + " \n"
+        if isinstance(self.rexpr, list):
+            self.rexpr= tuple(self.rexpr)    
         output = "letrec "+ str(self.identifier) + " " + str(tuple(alist)) + " = \n"
         output += "  "+ str(self.lexpr) + "  in \n"
         output += "  "+ str(self.rexpr) + " \n"
