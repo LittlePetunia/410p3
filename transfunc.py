@@ -150,7 +150,7 @@ def transformx(block,nextblock,written,loopnum):
 
         stmt = transformx(Block(block.stmt.block_items+[block.next]),[],["loop"+str(loopnum)],loopnum+1)
         
-
+        
 
         cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,stmt,forwritten)
@@ -183,8 +183,6 @@ def transformx(block,nextblock,written,loopnum):
 
 
         stmt = transformx(block.stmt,[],[],loopnum+1)
-        
-
         cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,stmt,whilewritten)
 
@@ -227,7 +225,7 @@ def makec(file):
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile =   raw_input("type the input file in input folder (e.g. p3_input6) :")
+    inputFile = "p3_input5"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
 
     File = makec(inputFile)
     print(File)
@@ -251,6 +249,8 @@ if __name__ == '__main__':
     # all above is print function prototype
     #--------------------------------------------
     #print function body after transfrom by our own ast
-    print("==============transform===========")
-    a=transformx(ast2.ext[0].body,[],written_visit,0)
+    print("=========transform ===========")
+    a=transformx(ast2.ext[0].body,[],[],0)
     print(a)
+
+    print("=========simplify===========")
