@@ -12,22 +12,22 @@ from ast import *
 sys.path.extend(['.','..'])
 import os
 
-written=[]
+written_visit=[]
 vas=[]
 
 class LHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
-        if (assignment.lvalue.name not in written):
-            written.append(assignment.lvalue.name)
+        if (assignment.lvalue.name not in written_visit):
+            written_visit.append(assignment.lvalue.name)
     
 
     def visit_Decl(self, decl):
         # If the declaration has an init field
         if decl.init is not None:
             # Show the name of the value initialized
-            if (decl.name not in written):
-                written.append(decl.name)
+            if (decl.name not in written_visit):
+                written_visit.append(decl.name)
 
 
     
@@ -58,10 +58,10 @@ class FunctionDefVisitor2(NodeVisitor):
 class FunctionPrototype(NodeVisitor):
     def __init__(self):
         self.vars =vas
-        self.written =written
+        self.written_visit =written_visit
 
     def __str__(self):
-        print("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns (" + ", ".join(list(map(str, self.written)))) +")"
+        print("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns (" + ", ".join(list(map(str, self.written_visit)))) +")"
         
 
 
@@ -182,16 +182,17 @@ def transformx(block,nextblock,written,loopnum):
 
 
         stmt = transformx(block.stmt,[],[],loopnum+1)
-        letinit = Let(whilewritten,stmt,["loop"+str(loopnum)] +whilewritten)
+        
 
         cond = transformx(block.cond,[],[],loopnum)
-        makeif = TernaryOp(cond,letinit,whilewritten)
+        makeif = TernaryOp(cond,stmt,whilewritten)
 
         if nextblock ==[]:
             for i in whilewritten:
                 if i not in written:
                     written.append(i)
             next=written
+            next.append("loop"+str(loopnum))
         else:
             for i in whilewritten:
                 if i not in written:
@@ -199,8 +200,9 @@ def transformx(block,nextblock,written,loopnum):
 
             next=transformx(nextblock[0],nextblock[1:],written,loopnum+1)
 
-        return Letrec('loop'+str(loopnum), whilewritten, makeif, next)
-
+        letre = Letrec('loop'+str(loopnum), whilewritten, makeif, next)
+        letinit = Let(whilewritten,letre,whilewritten)
+        return letinit
 
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
         return block
@@ -224,7 +226,7 @@ def makec(file):
     #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile = "p3_input5"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
+    inputFile = "p3_input9"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
 
     File = makec(inputFile)
     print(File)
@@ -239,7 +241,7 @@ if __name__ == '__main__':
     FunctionDefVisitor2().visit(ast2)
     print("=============variables========")
     print("written:")
-    print(written)
+    print(written_visit)
     print("variables:") 
     print(vas)
     print("=============function==========")
@@ -249,5 +251,5 @@ if __name__ == '__main__':
     #--------------------------------------------
     #print function body after transfrom by our own ast
     print("==============transform===========")
-    a=transformx(ast2.ext[0].body,[],[],0)
+    a=transformx(ast2.ext[0].body,[],written_visit,0)
     print(a)

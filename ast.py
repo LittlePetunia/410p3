@@ -347,7 +347,7 @@ class TernaryOp(Node):
             return "if  %s  \n then \n %s" %(self.cond, self.iftrue)
 
         else:
-            return "if  %s  \n then \n  %s \n else \n %s \n" %(self.cond, self.iftrue, self.iffalse)
+            return "if  %s  \n then \n %s \n else \n %s \n" %(self.cond, self.iftrue, self.iffalse)
     attr_names = ()
 
 
@@ -402,7 +402,7 @@ class Letrec(Node):
         arg = ""
         alist=[arg+" "+ str(a) for a in self.args]
         if isinstance(self.rexpr, list):
-            self.rexpr= tuple(self.rexpr)    
+            self.rexpr= str(self.rexpr[-1]) +" "+  str(tuple(self.rexpr[:-1]))    
         output = "letrec "+ str(self.identifier) + " " + str(tuple(alist)) + " = \n"
         output += "  "+ str(self.lexpr) + "  in \n"
         output += "  "+ str(self.rexpr) + " \n"
