@@ -284,8 +284,51 @@ def makec(file):
 simplify the output after transform. remove useless let binding and replace  constant var that only use once.
 
 """    
-def simplify(let):
-    return let
+def simplify(a):
+    #rule A variable that is only bound once to a constant can be replaced by this constant in its scope
+    #get each line in function body
+    lines =str(a).splitlines()
+
+    #search from beginning
+    output = ""
+    last = written_visit
+    used1 = []
+    usedvar = []
+    usedvalue = []
+    writtenlines = []
+    for i in range(len(lines) - 1):
+        if "Let" in lines[i]:
+            used1.append(lines[i].split()[1])
+    for i in range(len(lines) - 1):
+        if "Let" in lines[i]:
+            (var, value) = (lines[i].split()[1], lines[i ].split()[3])
+            if used1.count(var) == 1:
+                try:
+                    float(value)
+                    writtenlines.append(i)
+                    usedvar.append(var)
+                    usedvalue.append(value)
+                except ValueError:
+                    last = last
+    for i in range(len(lines) - 1):
+        if "Let" in lines[i]:
+            single =0
+            a= lines[i]
+            for j in range(len(usedvar)):
+                if usedvar[j] in lines[i].split("=")[1]:
+                    single +=1
+                    writtenlines.append(i)
+                    a = a.replace(usedvar[j], usedvalue[j]) 
+                    
+            if single > 0:
+                output+=a + "\n"
+        if not i in writtenlines:
+            output += lines[i] + "\n"
+    for i in range(len(usedvar)):
+        if usedvar[i] not in usedvalue[i]:
+            last[last.index(usedvar[i])] = usedvalue[i]
+    output += str(tuple(last))
+    return output
 
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
