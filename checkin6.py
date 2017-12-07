@@ -171,6 +171,7 @@ def transformx(block,nextblock,written,loopnum):
         
         letre =Letrec('loop'+str(loopnum), forwritten, makeif, next)
         letinit = Let(forwritten,letre,forwritten)
+
         return transformx(Block([block.init]+[letinit]),[],[],loopnum)
 
         

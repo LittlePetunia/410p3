@@ -15,6 +15,15 @@ import os
 written_visit=[]
 vas=[]
 
+class LHSPrinter(NodeVisitor):
+
+    def __init__(self):
+        self.written=[]
+
+    def visit_Assignment(self, assignment):
+        if (assignment.lvalue.name not in self.written):
+            self.written.append(assignment.lvalue.name)
+
 class LHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
@@ -61,10 +70,8 @@ class FunctionPrototype(NodeVisitor):
         self.written_visit =written_visit
 
     def __str__(self):
-        print("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns (" + ", ".join(list(map(str, self.written_visit)))) +")"
+        return ("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns (" + ", ".join(list(map(str, self.written_visit)))) +")"
         
-
-
 def transformx(block,nextblock,written,loopnum):
     #check whether it is block list or other class"
     if block.__class__.__name__ == "Block":
@@ -139,18 +146,12 @@ def transformx(block,nextblock,written,loopnum):
             args.append(transformx(i,[],written,loopnum))
         return FuncCall(transformx(block.name,[],written,loopnum),args)
     if block.__class__.__name__ =="For":
-        forwritten =[]
+        
         #always add init assignment into written variables
-        forwritten.append(block.init.lvalue.name)
-
-        for i in block.stmt.block_items:
-            if i.__class__.__name__ =="Assignment":
-                if i.lvalue.name not in forwritten:
-                    forwritten.append(i.lvalue.name)
-
+        a= LHSPrinter()
+        a.visit(block)
+        forwritten = a.written
         stmt = transformx(Block(block.stmt.block_items+[block.next]),[],["loop"+str(loopnum)],loopnum+1)
-        
-        
 
         cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,stmt,forwritten)
@@ -171,8 +172,8 @@ def transformx(block,nextblock,written,loopnum):
         
         letre =Letrec('loop'+str(loopnum), forwritten, makeif, next)
         letinit = Let(forwritten,letre,forwritten)
-        return transformx(Block([block.init]+[letinit]),[],[],loopnum)
 
+        return transformx(Block([block.init]+[letinit]),[],[],loopnum)
         
     if block.__class__.__name__ =="While":
         whilewritten =[]
@@ -244,7 +245,7 @@ if __name__ == '__main__':
     print("variables:") 
     print(vas)
     print("=============function==========")
-    FunctionPrototype().__str__()
+    print FunctionPrototype()
 
     # all above is print function prototype
     #--------------------------------------------
