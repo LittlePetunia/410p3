@@ -401,11 +401,14 @@ class Letrec(Node):
     def __str__(self):
         alist=[ str(a) for a in self.args]
         if isinstance(self.rexpr, list):
-            self.rexpr= str(self.rexpr[-1]) +" "+  str(tuple(self.rexpr[:-1]))    
-        output = "letrec "+ str(self.identifier) + " " + str(tuple(alist)) + " = \n"
+            self.rexpr= str(self.rexpr[-1]) +" "+  str(tuple(self.rexpr[:-1]))
+        vlist = str(tuple(alist)).replace(","," ").replace("("," ")
+        output = "letrec "+ str(self.identifier) + " " + vlist.replace(")"," ") + " = \n"
         output += "  "+ str(self.lexpr) + "  in \n"
         output += "  "+ str(self.rexpr) + " \n"
-        return list_to_tuple(output)
+        
+        
+        return output
         
     attr_names = ()
 
