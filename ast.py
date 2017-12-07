@@ -374,7 +374,7 @@ class Let(Node):
             self.rexpr=tuple(self.rexpr)
 
         output = "Let %s =  %s  in \n %s " %(self.identifier, self.lexpr,self.rexpr)
-        return list_to_tuple(output)
+        return list_to_tuple(output.replace("'", ""))
 
         
     attr_names = ()
@@ -399,8 +399,7 @@ class Letrec(Node):
         return tuple(nodelist)
 
     def __str__(self):
-        arg = ""
-        alist=[arg+" "+ str(a) for a in self.args]
+        alist=[ str(a) for a in self.args]
         if isinstance(self.rexpr, list):
             self.rexpr= str(self.rexpr[-1]) +" "+  str(tuple(self.rexpr[:-1]))    
         output = "letrec "+ str(self.identifier) + " " + str(tuple(alist)) + " = \n"
