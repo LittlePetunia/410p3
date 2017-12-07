@@ -15,6 +15,14 @@ import os
 written_visit=[]
 vas=[]
 
+
+"""
+
+visit the node of the AST body with left hand side, 
+first check if LHS is array ref object, then get the 
+array name. otherwise the name of the ID.  
+
+"""
 class LHSPrinter(NodeVisitor):
 
     def __init__(self):
@@ -30,6 +38,13 @@ class LHSPrinter(NodeVisitor):
         
        
 
+"""
+
+visit the node of the AST body with left hand side, 
+first check if LHS is array ref object, then get the 
+array name. otherwise the name of the ID. instead using global
+list for print the written variables  
+"""
 class LHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
@@ -49,7 +64,12 @@ class LHSPrinter2(NodeVisitor):
             if (decl.name not in written_visit):
                 written_visit.append(decl.name)
 
+"""
+visit the node of the AST body with all ID name,but remove 
+with ID name of Func Call. print all variables used in the 
+body
 
+"""
     
 class AllVariables(NodeVisitor):
     
@@ -63,9 +83,11 @@ class AllVariables(NodeVisitor):
                 self.visit(child)
 
 
-    
-
-
+"""
+call the visitor function body and only visit the method 
+that is not main in C file.(we dont care main method)
+all buildin input will be wrapped with void test method`
+"""
 
 class FunctionDefVisitor2(NodeVisitor):
 
@@ -74,6 +96,9 @@ class FunctionDefVisitor2(NodeVisitor):
             AllVariables().visit(funcdef.body)
             LHSPrinter2().visit(funcdef.body)
             
+"""
+str print of function prototype
+"""
 
 class FunctionPrototype(NodeVisitor):
     def __init__(self):
@@ -82,7 +107,10 @@ class FunctionPrototype(NodeVisitor):
 
     def __str__(self):
         return ("fun block_function("+ ",".join(list(map(str,self.vars))) + ") returns (" + ", ".join(list(map(str, self.written_visit)))) +")"
-        
+
+"""
+Transform miniC ast into our own AST with Let and Let rec binding
+"""     
 def transformx(block,nextblock,written,loopnum):
     #check whether it is block list or other class"
     if block.__class__.__name__ == "Block":
@@ -231,6 +259,11 @@ def transformx(block,nextblock,written,loopnum):
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
         return block
 
+"""
+
+make and create simple C file with sample input.
+Add void test method into file as the main method.
+"""  
 
 def makec(file):
 
@@ -245,7 +278,12 @@ def makec(file):
     f.close()
 
     return filename
-    
+
+"""
+
+simplify the output after transform. remove useless let binding and replace few constant var that only use once.
+
+"""    
 def simplify(let):
     return let
 
@@ -277,7 +315,7 @@ if __name__ == '__main__':
     #print function body after transfrom by our own ast
     print("=========transform ===========")
     a=transformx(ast2.ext[0].body,[],[],0)
-    print(a)
+    print a
 
     print("=========simplify===========")
 
