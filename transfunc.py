@@ -3,7 +3,7 @@ from pycparser import parse_file
 
 import sys
 import numbers
-
+import copy
 sys.path.append('./pyminic/minic/')
 from c_ast_to_minic import *
 # from minic_ast import *
@@ -281,7 +281,7 @@ def makec(file):
 
 """
 
-simplify the output after transform. remove useless let binding and replace few constant var that only use once.
+simplify the output after transform. remove useless let binding and replace  constant var that only use once.
 
 """    
 def simplify(let):
@@ -289,7 +289,7 @@ def simplify(let):
 
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile = "p3_input6"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
+    inputFile = raw_input("type the input file in input folder (e.g. p3_input6) :")
 
     File = makec(inputFile)
     print(File)
