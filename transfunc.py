@@ -21,14 +21,25 @@ class LHSPrinter(NodeVisitor):
         self.written=[]
 
     def visit_Assignment(self, assignment):
-        if (assignment.lvalue.name not in self.written):
+        if (assignment.lvalue.__class__.__name__ == "ArrayRef"):
+            if (assignment.lvalue.name.name not in self.written):
+                self.written.append(assignment.lvalue.name.name)
+
+        elif (assignment.lvalue.name not in self.written):
             self.written.append(assignment.lvalue.name)
+        
+       
 
 class LHSPrinter2(NodeVisitor):
 
     def visit_Assignment(self, assignment):
-        if (assignment.lvalue.name not in written_visit):
+        if (assignment.lvalue.__class__.__name__ == "ArrayRef"):
+            if (assignment.lvalue.name.name not in written_visit):
+                written_visit.append(assignment.lvalue.name.name)
+
+        elif (assignment.lvalue.name not in written_visit):
             written_visit.append(assignment.lvalue.name)
+       
     
 
     def visit_Decl(self, decl):
@@ -83,12 +94,18 @@ def transformx(block,nextblock,written,loopnum):
         
         if nextblock ==[]:
             #add written variable as the output in let format
-            if block.lvalue.name not in written:
+            if (block.lvalue.__class__.__name__ == "ArrayRef"):
+                if (block.lvalue.name.name not in written):
+                    written.append(block.lvalue.name.name)
+            elif block.lvalue.name not in written:
                 written.append(block.lvalue.name)
             next=written
         else:
              #check if there is not only 1 assignment left
-            if block.lvalue.name not in written:
+            if (block.lvalue.__class__.__name__ == "ArrayRef"):
+                if (block.lvalue.name.name not in written):
+                    written.append(block.lvalue.name.name)
+            elif block.lvalue.name not in written:
                 written.append(block.lvalue.name)
             next =transformx(nextblock[0],nextblock[1:],written,loopnum)
         return Let(transformx(block.lvalue,[],written,loopnum), transformx(block.rvalue,[],written,loopnum),next)
@@ -106,14 +123,22 @@ def transformx(block,nextblock,written,loopnum):
         #add if true assignment written vairables
         for i in block.iftrue.block_items:
             if i.__class__.__name__=="Assignment":
-                if i.lvalue.name not in ifwritten:
+                if (i.lvalue.__class__.__name__ == "ArrayRef"):
+                    if (i.lvalue.name.name not in ifwritten):
+                        ifwritten.append(i.lvalue.name.name)
+
+                elif i.lvalue.name not in ifwritten:
                     ifwritten.append(i.lvalue.name)
 
         #check whether the iffalse is none,add written variables
         if block.iffalse is not None:
             for i in block.iffalse.block_items:
                 if i.__class__.__name__=="Assignment":
-                    if i.lvalue.name not in ifwritten:
+                    if (i.lvalue.__class__.__name__ == "ArrayRef"):
+                        if (i.lvalue.name.name not in ifwritten):
+                            ifwritten.append(i.lvalue.name.name)
+
+                    elif i.lvalue.name not in ifwritten:
                         ifwritten.append(i.lvalue.name)
             ifstatemnet = TernaryOp(transformx(block.cond,[],[],loopnum),transformx(block.iftrue,[],ifwritten,loopnum),transformx(block.iffalse,[],ifwritten,loopnum),loopnum)
         else:
@@ -174,19 +199,17 @@ def transformx(block,nextblock,written,loopnum):
         letinit = Let(forwritten,letre,forwritten)
 
         return transformx(Block([block.init]+[letinit]),[],[],loopnum)
+
         
     if block.__class__.__name__ =="While":
-        whilewritten =[]
-        for i in block.stmt.block_items:
-            if i.__class__.__name__ =="Assignment":
-                if i.lvalue.name not in whilewritten:
-                    whilewritten.append(i.lvalue.name)
-
+        a= LHSPrinter()
+        a.visit(block)
+        whilewritten = a.written
 
         stmt = transformx(block.stmt,[],[],loopnum+1)
         cond = transformx(block.cond,[],[],loopnum)
         makeif = TernaryOp(cond,stmt,whilewritten)
-
+        
         if nextblock ==[]:
             for i in whilewritten:
                 if i not in written:
@@ -202,6 +225,7 @@ def transformx(block,nextblock,written,loopnum):
 
         letre = Letrec('loop'+str(loopnum), whilewritten, makeif, next)
         letinit = Let(whilewritten,letre,whilewritten)
+
         return letinit
 
     if block.__class__.__name__ =="Let" or block.__class__.__name__ =="Letrec":
@@ -222,11 +246,12 @@ def makec(file):
 
     return filename
     
+def simplify(let):
+    return let
 
-    #return lines
 if __name__ == '__main__':
     #change input file here by rename the inputfile 
-    inputFile = "p3_input5"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
+    inputFile = "p3_input6"  #raw_input("type the input file in input folder (e.g. p3_input6) :")
 
     File = makec(inputFile)
     print(File)
@@ -255,3 +280,5 @@ if __name__ == '__main__':
     print(a)
 
     print("=========simplify===========")
+
+    print simplify(a)
